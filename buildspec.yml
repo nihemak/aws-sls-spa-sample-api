@@ -1,0 +1,15 @@
+version: 0.2
+phases:
+  install:
+    commands:
+      - npm install -g serverless@1.30.0
+      - npm install
+  build:
+    commands:
+      - serverless deploy
+  post_build:
+    commands:
+      - zip -rq api.zip *
+artifacts:
+  files:
+    - api.zip
