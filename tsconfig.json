@@ -1,5 +1,9 @@
 {
   "compilerOptions": {
+    "strict": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noImplicitReturns": true,
     "sourceMap": true,
     "target": "es6",
     "lib": [
