@@ -10,5 +10,11 @@
     "prettier": [
       true
     ]
+  },
+  "linterOptions": {
+    "exclude": [
+      "**/*.d.ts",
+      "node_modules"
+    ]
   }
 }
