@@ -4,6 +4,8 @@
   "description": "Sample of serverless api",
   "main": "handler.js",
   "scripts": {
+    "lint": "node_modules/tslint/bin/tslint -c ./tslint.json --project . **/*.ts",
+    "lint-fix": "node_modules/tslint/bin/tslint -c ./tslint.json --project . --fix **/*.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
