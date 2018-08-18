@@ -12,7 +12,9 @@
     "docker-down": "npm run docker-compose -- down",
     "lint": "npm run docker-exec-sls -- node_modules/tslint/bin/tslint -c ./tslint.json --project . **/*.ts",
     "lint-fix": "npm run docker-exec-sls -- node_modules/tslint/bin/tslint -c ./tslint.json --project . --fix **/*.ts",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "webpack": "npm run docker-exec-sls -- serverless webpack",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "test-all": "npm run docker-down && npm run docker-up-dev && npm run lint && npm run webpack && npm run docker-down"
   },
   "dependencies": {
     "source-map-support": "^0.5.0"
