@@ -1,0 +1,19 @@
+version: '3'
+services:
+  serverless:
+    build: ./serverless
+    tty: true
+    environment:
+      SERVICE_NAME: 'local-docker'
+      STAGE_ENV: 'local'
+      LAMBDA_ROLE: 'dummy'
+      DEPLOY_BUCKET: 'dummy'
+    volumes:
+      - ../package.json:/app/package.json
+      - ../package-lock.json:/app/package-lock.json
+      - ../tsconfig.json:/app/tsconfig.json
+      - ../tslint.json:/app/tslint.json
+      - ../serverless.yml:/app/serverless.yml
+      - ../source-map-install.js:/app/source-map-install.js
+      - ../webpack.config.js:/app/webpack.config.js
+      - ../handler.ts:/app/handler.ts
