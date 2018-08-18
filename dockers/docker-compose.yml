@@ -10,6 +10,3 @@ services:
       DEPLOY_BUCKET: 'dummy'
     volumes:
       - ../:/app/
-      - ./serverless/node_modules/:/app/node_modules/
-      - ./serverless/.serverless/:/app/.serverless/
-      - ./serverless/.webpack/:/app/.webpack/
