@@ -3,6 +3,8 @@ services:
   serverless:
     build: ./serverless
     tty: true
+    ports:
+      - 3000:3000
     environment:
       SERVICE_NAME: 'local-docker'
       STAGE_ENV: 'local'
