@@ -9,11 +9,7 @@ services:
       LAMBDA_ROLE: 'dummy'
       DEPLOY_BUCKET: 'dummy'
     volumes:
-      - ../package.json:/app/package.json
-      - ../package-lock.json:/app/package-lock.json
-      - ../tsconfig.json:/app/tsconfig.json
-      - ../tslint.json:/app/tslint.json
-      - ../serverless.yml:/app/serverless.yml
-      - ../source-map-install.js:/app/source-map-install.js
-      - ../webpack.config.js:/app/webpack.config.js
-      - ../handler.ts:/app/handler.ts
+      - ../:/app/
+      - ./serverless/node_modules/:/app/node_modules/
+      - ./serverless/.serverless/:/app/.serverless/
+      - ./serverless/.webpack/:/app/.webpack/
