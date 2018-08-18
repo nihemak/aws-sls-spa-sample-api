@@ -4,6 +4,12 @@
   "description": "Sample of serverless api",
   "main": "handler.js",
   "scripts": {
+    "docker-compose": "docker-compose -f dockers/docker-compose.yml",
+    "docker-exec-sls": "npm run docker-compose -- exec serverless",
+    "docker-build": "npm run docker-compose -- build",
+    "docker-up": "npm run docker-compose -- up -d && npm run docker-exec-sls -- npm install --production",
+    "docker-up-dev": "npm run docker-compose -- up -d && npm run docker-exec-sls -- npm install",
+    "docker-down": "npm run docker-compose -- down",
     "lint": "node_modules/tslint/bin/tslint -c ./tslint.json --project . **/*.ts",
     "lint-fix": "node_modules/tslint/bin/tslint -c ./tslint.json --project . --fix **/*.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
