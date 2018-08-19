@@ -12,3 +12,9 @@ services:
       DEPLOY_BUCKET: 'dummy'
     volumes:
       - ../:/app/
+    depends_on:
+      - dynamodb
+  dynamodb:
+    image: instructure/dynamo-local-admin
+    ports:
+      - 8000:8000
