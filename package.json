@@ -2,7 +2,7 @@
   "name": "aws-sls-spa-sample-api",
   "version": "0.0.0",
   "description": "Sample of serverless api",
-  "main": "handler.js",
+  "main": "src/controllers/*.ts",
   "scripts": {
     "docker-compose": "docker-compose -f dockers/docker-compose.yml",
     "docker-exec-sls": "npm run docker-compose -- exec serverless",
