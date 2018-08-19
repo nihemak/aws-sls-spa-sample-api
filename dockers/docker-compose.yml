@@ -18,3 +18,5 @@ services:
     image: instructure/dynamo-local-admin
     ports:
       - 8000:8000
+    volumes:
+      - ./dynamodb/db:/var/lib/dynamodb
