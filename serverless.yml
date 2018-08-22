@@ -22,3 +22,9 @@ functions:
       - http:
           method: get
           path: hello
+  init:
+    handler: src/controllers/maintenances.init
+    events:
+      - http:
+          method: get
+          path: maintenances/init
