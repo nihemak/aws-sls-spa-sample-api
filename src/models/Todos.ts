@@ -27,13 +27,21 @@ export class Todos {
     });
   }
 
-  public createTable(callback: any) {
-    let createOptions: { [key: string]: any } = {};
-    createOptions[this.tableName()] = {
-      readCapacity: 1,
-      writeCapacity: 1
-    };
-    dynamo.createTables(createOptions, callback);
+  public createTable(): Promise<void> {
+    return new Promise((resolve, reject) => {
+      let createOptions: { [key: string]: any } = {};
+      createOptions[this.tableName()] = {
+        readCapacity: 1,
+        writeCapacity: 1
+      };
+      dynamo.createTables(createOptions, (error: any) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve();
+        }
+      });
+    });
   }
 
   private tableName() {
