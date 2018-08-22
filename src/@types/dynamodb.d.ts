@@ -1,6 +1,6 @@
 declare module "dynamodb" {
   var types: any;
-  function dynamoDriver(x: any): any;
-  function define(x: any, y: any): any;
-  function createTables(x: any, y: any): any;
+  function dynamoDriver(driver: any): any;
+  function define(modelName: string, config: any): any;
+  function createTables(options: any, callback: any): any;
 }
