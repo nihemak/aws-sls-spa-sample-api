@@ -17,23 +17,22 @@ export const init: Handler = (
   }
 
   const todos = new Todos();
-  todos.createTable(function(err: any) {
-    let response = {};
-    if (err) {
-      response = {
-        statusCode: 500,
-        body: JSON.stringify({
-          message: "Error creating tables: " + err
-        })
-      };
-    } else {
-      response = {
+  todos
+    .createTable()
+    .then(() => {
+      cb(null, {
         statusCode: 200,
         body: JSON.stringify({
           message: "Tables has been created"
         })
-      };
-    }
-    cb(null, response);
-  });
+      });
+    })
+    .catch(error => {
+      cb(null, {
+        statusCode: 500,
+        body: JSON.stringify({
+          message: "Error creating tables: " + error
+        })
+      });
+    });
 };
