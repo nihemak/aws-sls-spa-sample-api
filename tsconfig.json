@@ -9,7 +9,11 @@
     "lib": [
       "esnext"
     ],
-    "moduleResolution": "node"
+    "moduleResolution": "node",
+    "typeRoots": [
+      "node_modules/@types",
+      "src/@types"
+    ]
   },
   "exclude": [
     "node_modules"
