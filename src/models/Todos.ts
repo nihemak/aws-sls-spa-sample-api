@@ -22,7 +22,7 @@ export class Todos {
       hashKey: "id",
       timestamps: false,
       schema: {
-        id: dynamo.types.uuid(),
+        id: dynamo.types.uuid()
       }
     });
   }
