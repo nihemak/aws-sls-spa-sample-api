@@ -8,8 +8,12 @@ services:
     environment:
       SERVICE_NAME: 'local-docker'
       STAGE_ENV: 'local'
+      IS_OFFLINE: 'true'
+      REGION: 'ap-northeast-1'
       LAMBDA_ROLE: 'dummy'
       DEPLOY_BUCKET: 'dummy'
+      DYNAMO_ENDPOINT: 'http://dynamodb:8000'
+      DYNAMO_PREFIX: 'local'
     volumes:
       - ../:/app/
     depends_on:
