@@ -6,7 +6,7 @@ export const init: Handler = (
   _context: Context,
   cb: Callback
 ) => {
-  if (! process.env.IS_OFFLINE) {
+  if (!process.env.IS_OFFLINE) {
     cb(null, {
       statusCode: 400,
       body: JSON.stringify({
