@@ -20,12 +20,14 @@
   "dependencies": {
     "dynamodb": "^1.1.2",
     "joi": "^13.6.0",
-    "source-map-support": "^0.5.0"
+    "source-map-support": "^0.5.0",
+    "validator": "^10.6.0"
   },
   "devDependencies": {
     "@types/aws-lambda": "8.10.1",
     "@types/joi": "^13.4.3",
     "@types/node": "^8.0.57",
+    "@types/validator": "^9.4.1",
     "prettier": "^1.14.2",
     "serverless-offline": "^3.25.8",
     "serverless-webpack": "^5.1.1",
