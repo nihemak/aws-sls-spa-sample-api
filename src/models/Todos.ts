@@ -34,6 +34,28 @@ export class Todos {
     });
   }
 
+  public create(text: string): Promise<any> {
+    const timestamp = new Date().getTime();
+
+    return new Promise((resolve, reject) => {
+      this.schema.create(
+        {
+          text: text,
+          createdAt: timestamp,
+          updatedAt: timestamp
+        },
+        function(err: any, todo: any) {
+          if (err) {
+            reject(err);
+          } else {
+            console.log("created account in DynamoDB", todo.get("text"));
+            resolve(todo.get());
+          }
+        }
+      );
+    });
+  }
+
   public createTable(): Promise<void> {
     return new Promise((resolve, reject) => {
       let createOptions: { [key: string]: any } = {};
