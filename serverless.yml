@@ -40,3 +40,9 @@ functions:
       - http:
           path: todos
           method: get
+  get:
+    handler: src/controllers/todos.get
+    events:
+      - http:
+          path: todos/{id}
+          method: get

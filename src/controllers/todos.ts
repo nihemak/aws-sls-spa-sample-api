@@ -60,3 +60,37 @@ export const list: Handler = (
       });
     });
 };
+
+export const get: Handler = (
+  event: APIGatewayEvent,
+  _: Context,
+  cb: Callback
+) => {
+  if (!event.pathParameters) {
+    console.error("Validation Failed");
+    cb(null, {
+      statusCode: 400,
+      body: JSON.stringify({
+        message: "Couldn't fetch the todo item."
+      })
+    });
+    return;
+  }
+  new Todos()
+    .get(event.pathParameters.id)
+    .then(todo => {
+      cb(null, {
+        statusCode: 200,
+        body: JSON.stringify(todo)
+      });
+    })
+    .catch(error => {
+      console.error(error);
+      cb(null, {
+        statusCode: error.statusCode || 501,
+        body: JSON.stringify({
+          message: "Couldn't fetch the todo item."
+        })
+      });
+    });
+};
