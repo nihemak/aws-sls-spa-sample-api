@@ -1,5 +1,6 @@
 import * as AWS from "aws-sdk";
 import * as dynamo from "dynamodb";
+import * as Joi from "joi";
 
 let options = {};
 if (process.env.IS_OFFLINE) {
@@ -17,12 +18,18 @@ if (process.env.IS_OFFLINE) {
 dynamo.dynamoDriver(new AWS.DynamoDB(options));
 
 export class Todos {
+  private schema: any;
+
   constructor() {
-    dynamo.define(this.tableName(), {
+    this.schema = dynamo.define(this.tableName(), {
       hashKey: "id",
       timestamps: false,
       schema: {
-        id: dynamo.types.uuid()
+        id: dynamo.types.uuid(),
+        text: Joi.string(),
+        checked: Joi.boolean().default(false),
+        createdAt: Joi.number(),
+        updatedAt: Joi.number().default(Date.now, "timestamp")
       }
     });
   }
