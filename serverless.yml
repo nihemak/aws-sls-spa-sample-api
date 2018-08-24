@@ -34,3 +34,9 @@ functions:
       - http:
           path: todos
           method: post
+  list:
+    handler: src/controllers/todos.list
+    events:
+      - http:
+          path: todos
+          method: get
