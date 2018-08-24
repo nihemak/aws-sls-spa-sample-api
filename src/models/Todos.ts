@@ -75,13 +75,12 @@ export class Todos {
 
   public get(id: string): Promise<any> {
     return new Promise((resolve, reject) => {
-      this.schema
-        .get(id, (err: any, result: any) => {
-          if (err) {
-            return reject(err);
-          }
-          resolve(result.get());
-        });
+      this.schema.get(id, (err: any, result: any) => {
+        if (err) {
+          return reject(err);
+        }
+        resolve(result.get());
+      });
     });
   }
 
