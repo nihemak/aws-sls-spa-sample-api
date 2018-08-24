@@ -56,6 +56,23 @@ export class Todos {
     });
   }
 
+  public all(): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.schema
+        .scan()
+        .loadAll()
+        .exec((err: any, result: any) => {
+          if (err) {
+            return reject(err);
+          }
+          if (result.Count === 0 || !result.Items) {
+            return resolve([]);
+          }
+          resolve(result.Items.map((item: any) => item.get()));
+        });
+    });
+  }
+
   public createTable(): Promise<void> {
     return new Promise((resolve, reject) => {
       let createOptions: { [key: string]: any } = {};
