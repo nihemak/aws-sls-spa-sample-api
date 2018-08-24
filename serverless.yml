@@ -28,3 +28,9 @@ functions:
       - http:
           method: get
           path: maintenances/init
+  create:
+    handler: src/controllers/todos.create
+    events:
+      - http:
+          path: todos
+          method: post
