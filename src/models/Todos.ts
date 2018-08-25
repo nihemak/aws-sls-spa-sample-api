@@ -84,6 +84,24 @@ export class Todos {
     });
   }
 
+  public update(id: string, text: string, checked: boolean): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.schema.update(
+        {
+          id: id,
+          text: text,
+          checked: checked
+        },
+        (err: any, result: any) => {
+          if (err) {
+            return reject(err);
+          }
+          resolve(result.get());
+        }
+      );
+    });
+  }
+
   public createTable(): Promise<void> {
     return new Promise((resolve, reject) => {
       let createOptions: { [key: string]: any } = {};
