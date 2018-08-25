@@ -102,6 +102,17 @@ export class Todos {
     });
   }
 
+  public delete(id: string): Promise<any> {
+    return new Promise((resolve, reject) => {
+      this.schema.destroy(id, (err: any) => {
+        if (err) {
+          return reject(err);
+        }
+        resolve();
+      });
+    });
+  }
+
   public createTable(): Promise<void> {
     return new Promise((resolve, reject) => {
       let createOptions: { [key: string]: any } = {};
