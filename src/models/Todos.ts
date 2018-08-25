@@ -28,21 +28,17 @@ export class Todos {
         id: dynamo.types.uuid(),
         text: Joi.string(),
         checked: Joi.boolean().default(false),
-        createdAt: Joi.number(),
+        createdAt: Joi.number().default(Date.now, "timestamp"),
         updatedAt: Joi.number().default(Date.now, "timestamp")
       }
     });
   }
 
   public create(text: string): Promise<any> {
-    const timestamp = new Date().getTime();
-
     return new Promise((resolve, reject) => {
       this.schema.create(
         {
-          text: text,
-          createdAt: timestamp,
-          updatedAt: timestamp
+          text: text
         },
         function(err: any, todo: any) {
           if (err) {
@@ -89,11 +85,13 @@ export class Todos {
 
   public update(id: string, text: string, checked: boolean): Promise<any> {
     return new Promise((resolve, reject) => {
+      const timestamp = new Date().getTime();
       this.schema.update(
         {
           id: id,
           text: text,
-          checked: checked
+          checked: checked,
+          updatedAt: timestamp
         },
         (err: any, result: any) => {
           if (err) {
