@@ -46,3 +46,9 @@ functions:
       - http:
           path: todos/{id}
           method: get
+  update:
+    handler: src/controllers/todos.update
+    events:
+      - http:
+          path: todos/{id}
+          method: put
