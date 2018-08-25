@@ -149,3 +149,37 @@ export const update: Handler = (
       });
     });
 };
+
+export const destroy: Handler = (
+  event: APIGatewayEvent,
+  _: Context,
+  cb: Callback
+) => {
+  if (!event.pathParameters) {
+    console.error("Validation Failed");
+    cb(null, {
+      statusCode: 400,
+      body: JSON.stringify({
+        message: "Couldn't remove the todo item."
+      })
+    });
+    return;
+  }
+  new Todos()
+    .delete(event.pathParameters.id)
+    .then(() => {
+      cb(null, {
+        statusCode: 200,
+        body: JSON.stringify({})
+      });
+    })
+    .catch(error => {
+      console.error(error);
+      cb(null, {
+        statusCode: error.statusCode || 501,
+        body: JSON.stringify({
+          message: "Couldn't remove the todo item."
+        })
+      });
+    });
+};

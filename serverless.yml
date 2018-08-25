@@ -52,3 +52,9 @@ functions:
       - http:
           path: todos/{id}
           method: put
+  delete:
+    handler: src/controllers/todos.destroy
+    events:
+      - http:
+          path: todos/{id}
+          method: delete
