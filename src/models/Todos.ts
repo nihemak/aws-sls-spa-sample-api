@@ -44,7 +44,7 @@ export class Todos {
           if (err) {
             reject(err);
           } else {
-            console.log("created account in DynamoDB", todo.get("text"));
+            console.log("created todo in DynamoDB", todo.get("text"));
             resolve(todo.get());
           }
         }
