@@ -79,6 +79,9 @@ export class Todos {
         if (err) {
           return reject(err);
         }
+        if (!result) {
+          return resolve({});
+        }
         resolve(result.get());
       });
     });
