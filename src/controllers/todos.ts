@@ -47,40 +47,27 @@ export const list: Handler = async (
   }
 };
 
-export const get: Handler = (
+export const get: Handler = async (
   event: APIGatewayEvent,
   _: Context,
   cb: Callback
 ) => {
-  validateGet(event)
-    .then(input => {
-      new Todos()
-        .get(input.id)
-        .then(todo => {
-          cb(null, {
-            statusCode: 200,
-            body: JSON.stringify(todo)
-          });
-        })
-        .catch(error => {
-          console.error(error);
-          cb(null, {
-            statusCode: error.statusCode || 501,
-            body: JSON.stringify({
-              message: "Couldn't fetch the todo item."
-            })
-          });
-        });
-    })
-    .catch(() => {
-      console.error("Validation Failed");
-      cb(null, {
-        statusCode: 400,
-        body: JSON.stringify({
-          message: "Couldn't fetch the todo item."
-        })
-      });
+  try {
+    let input = await validateGet(event);
+    let todo = await new Todos().get(input.id);
+    cb(null, {
+      statusCode: 200,
+      body: JSON.stringify(todo)
     });
+  } catch (error) {
+    console.error(error);
+    cb(null, {
+      statusCode: error.statusCode || 501,
+      body: JSON.stringify({
+        message: "Couldn't fetch the todo item."
+      })
+    });
+  }
 };
 
 export const update: Handler = (
