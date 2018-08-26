@@ -173,7 +173,7 @@ export const destroy: Handler = (
 function validateCreate(event: APIGatewayEvent): Promise<any> {
   return new Promise((resolve, reject) => {
     const input = JSON.parse(event.body || "{}");
-    if (!input.text || validator.isEmpty(input.text)) {
+    if (!("text" in input) || validator.isEmpty(input.text)) {
       reject();
     } else {
       resolve({
@@ -201,10 +201,10 @@ function validateUpdate(event: APIGatewayEvent): Promise<any> {
       return reject();
     }
     const input = JSON.parse(event.body || "{}");
-    if (!input.text || validator.isEmpty(input.text)) {
+    if (!("text" in input) || validator.isEmpty(input.text)) {
       return reject();
     }
-    if (!input.checked || !validator.isBoolean(input.checked)) {
+    if (!("checked" in input) || !validator.isBoolean(input.checked)) {
       return reject();
     }
     resolve({
