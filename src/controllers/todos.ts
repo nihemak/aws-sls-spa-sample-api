@@ -139,28 +139,30 @@ export const destroy: Handler = (
   _: Context,
   cb: Callback
 ) => {
-  if (!event.pathParameters) {
-    console.error("Validation Failed");
-    cb(null, {
-      statusCode: 400,
-      body: JSON.stringify({
-        message: "Couldn't remove the todo item."
-      })
-    });
-    return;
-  }
-  new Todos()
-    .delete(event.pathParameters.id)
-    .then(() => {
-      cb(null, {
-        statusCode: 200,
-        body: JSON.stringify({})
-      });
+  validateDestroy(event)
+    .then(input => {
+      new Todos()
+        .delete(input.id)
+        .then(() => {
+          cb(null, {
+            statusCode: 200,
+            body: JSON.stringify({})
+          });
+        })
+        .catch(error => {
+          console.error(error);
+          cb(null, {
+            statusCode: error.statusCode || 501,
+            body: JSON.stringify({
+              message: "Couldn't remove the todo item."
+            })
+          });
+        });
     })
-    .catch(error => {
-      console.error(error);
+    .catch(() => {
+      console.error("Validation Failed");
       cb(null, {
-        statusCode: error.statusCode || 501,
+        statusCode: 400,
         body: JSON.stringify({
           message: "Couldn't remove the todo item."
         })
@@ -210,5 +212,17 @@ function validateUpdate(event: APIGatewayEvent): Promise<any> {
       text: input.text,
       checked: input.checked
     });
+  });
+}
+
+function validateDestroy(event: APIGatewayEvent): Promise<any> {
+  return new Promise((resolve, reject) => {
+    if (!event.pathParameters) {
+      reject();
+    } else {
+      resolve({
+        id: event.pathParameters.id
+      });
+    }
   });
 }
