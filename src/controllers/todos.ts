@@ -67,30 +67,32 @@ export const get: Handler = (
   _: Context,
   cb: Callback
 ) => {
-  if (!event.pathParameters) {
-    console.error("Validation Failed");
-    cb(null, {
-      statusCode: 400,
-      body: JSON.stringify({
-        message: "Couldn't fetch the todo item."
-      })
-    });
-    return;
-  }
-  new Todos()
-    .get(event.pathParameters.id)
-    .then(todo => {
-      cb(null, {
-        statusCode: 200,
-        body: JSON.stringify(todo)
-      });
+  validateGet(event)
+    .then(input => {
+      new Todos()
+        .get(input.id)
+        .then(todo => {
+          cb(null, {
+            statusCode: 200,
+            body: JSON.stringify(todo)
+          });
+        })
+        .catch(error => {
+          console.error(error);
+          cb(null, {
+            statusCode: error.statusCode || 501,
+            body: JSON.stringify({
+              message: "Couldn't fetch the todo item."
+            })
+          });
+        });
     })
-    .catch(error => {
-      console.error(error);
+    .catch(() => {
+      console.error("Validation Failed");
       cb(null, {
-        statusCode: error.statusCode || 501,
+        statusCode: 400,
         body: JSON.stringify({
-          message: "Couldn't fetch the todo item."
+          message: "Couldn't create the todo item."
         })
       });
     });
@@ -193,6 +195,18 @@ function validateCreate(event: APIGatewayEvent): Promise<any> {
     } else {
       resolve({
         text: input.text
+      });
+    }
+  });
+}
+
+function validateGet(event: APIGatewayEvent): Promise<any> {
+  return new Promise((resolve, reject) => {
+    if (!event.pathParameters) {
+      reject();
+    } else {
+      resolve({
+        id: event.pathParameters.id
       });
     }
   });
