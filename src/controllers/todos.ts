@@ -7,29 +7,30 @@ export const create: Handler = (
   _: Context,
   cb: Callback
 ) => {
-  const input = JSON.parse(event.body || "{}");
-  if (!input.text || validator.isEmpty(input.text)) {
-    console.error("Validation Failed");
-    cb(null, {
-      statusCode: 400,
-      body: JSON.stringify({
-        message: "Couldn't create the todo item."
-      })
-    });
-    return;
-  }
-  new Todos()
-    .create(input.text)
-    .then(todo => {
-      cb(null, {
-        statusCode: 200,
-        body: JSON.stringify(todo)
-      });
+  validateCreate(event)
+    .then(input => {
+      new Todos()
+        .create(input.text)
+        .then(todo => {
+          cb(null, {
+            statusCode: 200,
+            body: JSON.stringify(todo)
+          });
+        })
+        .catch(error => {
+          console.error(error);
+          cb(null, {
+            statusCode: error.statusCode || 501,
+            body: JSON.stringify({
+              message: "Couldn't create the todo item."
+            })
+          });
+        });
     })
-    .catch(error => {
-      console.error(error);
+    .catch(() => {
+      console.error("Validation Failed");
       cb(null, {
-        statusCode: error.statusCode || 501,
+        statusCode: 400,
         body: JSON.stringify({
           message: "Couldn't create the todo item."
         })
@@ -183,3 +184,16 @@ export const destroy: Handler = (
       });
     });
 };
+
+function validateCreate(event: APIGatewayEvent): Promise<any> {
+  return new Promise((resolve, reject) => {
+    const input = JSON.parse(event.body || "{}");
+    if (!input.text || validator.isEmpty(input.text)) {
+      reject();
+    } else {
+      resolve({
+        text: input.text
+      });
+    }
+  });
+}
