@@ -2,40 +2,27 @@ import { APIGatewayEvent, Callback, Context, Handler } from "aws-lambda";
 import * as validator from "validator";
 import { Todos } from "../models/Todos";
 
-export const create: Handler = (
+export const create: Handler = async (
   event: APIGatewayEvent,
   _: Context,
   cb: Callback
 ) => {
-  validateCreate(event)
-    .then(input => {
-      new Todos()
-        .create(input.text)
-        .then(todo => {
-          cb(null, {
-            statusCode: 200,
-            body: JSON.stringify(todo)
-          });
-        })
-        .catch(error => {
-          console.error(error);
-          cb(null, {
-            statusCode: error.statusCode || 501,
-            body: JSON.stringify({
-              message: "Couldn't create the todo item."
-            })
-          });
-        });
-    })
-    .catch(() => {
-      console.error("Validation Failed");
-      cb(null, {
-        statusCode: 400,
-        body: JSON.stringify({
-          message: "Couldn't create the todo item."
-        })
-      });
+  try {
+    let input = await validateCreate(event);
+    let todo = await new Todos().create(input.text);
+    cb(null, {
+      statusCode: 200,
+      body: JSON.stringify(todo)
     });
+  } catch (error) {
+    console.error(error);
+    cb(null, {
+      statusCode: error.statusCode || 501,
+      body: JSON.stringify({
+        message: "Couldn't create the todo item."
+      })
+    });
+  }
 };
 
 export const list: Handler = (
@@ -174,7 +161,9 @@ function validateCreate(event: APIGatewayEvent): Promise<any> {
   return new Promise((resolve, reject) => {
     const input = JSON.parse(event.body || "{}");
     if (!("text" in input) || validator.isEmpty(input.text)) {
-      reject();
+      reject({
+        statusCode: 400
+      });
     } else {
       resolve({
         text: input.text
