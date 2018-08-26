@@ -70,40 +70,27 @@ export const get: Handler = async (
   }
 };
 
-export const update: Handler = (
+export const update: Handler = async (
   event: APIGatewayEvent,
   _: Context,
   cb: Callback
 ) => {
-  validateUpdate(event)
-    .then(input => {
-      new Todos()
-        .update(input.id, input.text, input.checked)
-        .then(todo => {
-          cb(null, {
-            statusCode: 200,
-            body: JSON.stringify(todo)
-          });
-        })
-        .catch(error => {
-          console.error(error);
-          cb(null, {
-            statusCode: error.statusCode || 501,
-            body: JSON.stringify({
-              message: "Couldn't update the todo item."
-            })
-          });
-        });
-    })
-    .catch(() => {
-      console.error("Validation Failed");
-      cb(null, {
-        statusCode: 400,
-        body: JSON.stringify({
-          message: "Couldn't update the todo item."
-        })
-      });
+  try {
+    let input = await validateUpdate(event);
+    let todo = await new Todos().update(input.id, input.text, input.checked);
+    cb(null, {
+      statusCode: 200,
+      body: JSON.stringify(todo)
     });
+  } catch (error) {
+    console.error(error);
+    cb(null, {
+      statusCode: error.statusCode || 501,
+      body: JSON.stringify({
+        message: "Couldn't update the todo item."
+      })
+    });
+  }
 };
 
 export const destroy: Handler = (
@@ -178,17 +165,25 @@ function validateGet(event: APIGatewayEvent): Promise<any> {
 function validateUpdate(event: APIGatewayEvent): Promise<any> {
   return new Promise((resolve, reject) => {
     if (!event.pathParameters) {
-      return reject();
+      return reject({
+        statusCode: 400
+      });
     }
     if (!("id" in event.pathParameters)) {
-      return reject();
+      return reject({
+        statusCode: 400
+      });
     }
     const input = JSON.parse(event.body || "{}");
     if (!("text" in input) || validator.isEmpty(input.text)) {
-      return reject();
+      return reject({
+        statusCode: 400
+      });
     }
     if (!("checked" in input) || !validator.isBoolean(input.checked)) {
-      return reject();
+      return reject({
+        statusCode: 400
+      });
     }
     resolve({
       id: event.pathParameters.id,
