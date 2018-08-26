@@ -92,7 +92,7 @@ export const get: Handler = (
       cb(null, {
         statusCode: 400,
         body: JSON.stringify({
-          message: "Couldn't create the todo item."
+          message: "Couldn't fetch the todo item."
         })
       });
     });
