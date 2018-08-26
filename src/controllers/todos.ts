@@ -186,18 +186,23 @@ function validateCreate(event: APIGatewayEvent): Promise<any> {
 function validateGet(event: APIGatewayEvent): Promise<any> {
   return new Promise((resolve, reject) => {
     if (!event.pathParameters) {
-      reject();
-    } else {
-      resolve({
-        id: event.pathParameters.id
-      });
+      return reject();
     }
+    if (!("id" in event.pathParameters)) {
+      return reject();
+    }
+    resolve({
+      id: event.pathParameters.id
+    });
   });
 }
 
 function validateUpdate(event: APIGatewayEvent): Promise<any> {
   return new Promise((resolve, reject) => {
     if (!event.pathParameters) {
+      return reject();
+    }
+    if (!("id" in event.pathParameters)) {
       return reject();
     }
     const input = JSON.parse(event.body || "{}");
@@ -218,11 +223,13 @@ function validateUpdate(event: APIGatewayEvent): Promise<any> {
 function validateDestroy(event: APIGatewayEvent): Promise<any> {
   return new Promise((resolve, reject) => {
     if (!event.pathParameters) {
-      reject();
-    } else {
-      resolve({
-        id: event.pathParameters.id
-      });
+      return reject();
     }
+    if (!("id" in event.pathParameters)) {
+      return reject();
+    }
+    resolve({
+      id: event.pathParameters.id
+    });
   });
 }
