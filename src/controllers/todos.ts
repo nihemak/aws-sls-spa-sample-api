@@ -25,28 +25,26 @@ export const create: Handler = async (
   }
 };
 
-export const list: Handler = (
+export const list: Handler = async (
   _event: APIGatewayEvent,
   _: Context,
   cb: Callback
 ) => {
-  new Todos()
-    .all()
-    .then(todos => {
-      cb(null, {
-        statusCode: 200,
-        body: JSON.stringify(todos)
-      });
-    })
-    .catch(error => {
-      console.error(error);
-      cb(null, {
-        statusCode: error.statusCode || 501,
-        body: JSON.stringify({
-          message: "Couldn't fetch the todos."
-        })
-      });
+  try {
+    let todos = await new Todos().all();
+    cb(null, {
+      statusCode: 200,
+      body: JSON.stringify(todos)
     });
+  } catch (error) {
+    console.error(error);
+    cb(null, {
+      statusCode: error.statusCode || 501,
+      body: JSON.stringify({
+        message: "Couldn't fetch the todos."
+      })
+    });
+  }
 };
 
 export const get: Handler = (
@@ -175,10 +173,14 @@ function validateCreate(event: APIGatewayEvent): Promise<any> {
 function validateGet(event: APIGatewayEvent): Promise<any> {
   return new Promise((resolve, reject) => {
     if (!event.pathParameters) {
-      return reject();
+      return reject({
+        statusCode: 400
+      });
     }
     if (!("id" in event.pathParameters)) {
-      return reject();
+      return reject({
+        statusCode: 400
+      });
     }
     resolve({
       id: event.pathParameters.id
