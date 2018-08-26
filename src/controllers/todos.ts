@@ -103,49 +103,30 @@ export const update: Handler = (
   _: Context,
   cb: Callback
 ) => {
-  if (!event.pathParameters) {
-    console.error("Validation Failed");
-    cb(null, {
-      statusCode: 400,
-      body: JSON.stringify({
-        message: "Couldn't update the todo item. id"
-      })
-    });
-    return;
-  }
-  const input = JSON.parse(event.body || "{}");
-  if (!input.text || validator.isEmpty(input.text)) {
-    console.error("Validation Failed");
-    cb(null, {
-      statusCode: 400,
-      body: JSON.stringify({
-        message: "Couldn't update the todo item. text"
-      })
-    });
-    return;
-  }
-  if (!input.checked || !validator.isBoolean(input.checked)) {
-    console.error("Validation Failed");
-    cb(null, {
-      statusCode: 400,
-      body: JSON.stringify({
-        message: "Couldn't update the todo item. checked"
-      })
-    });
-    return;
-  }
-  new Todos()
-    .update(event.pathParameters.id, input.text, input.checked)
-    .then(todo => {
-      cb(null, {
-        statusCode: 200,
-        body: JSON.stringify(todo)
-      });
+  validateUpdate(event)
+    .then(input => {
+      new Todos()
+        .update(input.id, input.text, input.checked)
+        .then(todo => {
+          cb(null, {
+            statusCode: 200,
+            body: JSON.stringify(todo)
+          });
+        })
+        .catch(error => {
+          console.error(error);
+          cb(null, {
+            statusCode: error.statusCode || 501,
+            body: JSON.stringify({
+              message: "Couldn't update the todo item."
+            })
+          });
+        });
     })
-    .catch(error => {
-      console.error(error);
+    .catch(() => {
+      console.error("Validation Failed");
       cb(null, {
-        statusCode: error.statusCode || 501,
+        statusCode: 400,
         body: JSON.stringify({
           message: "Couldn't update the todo item."
         })
@@ -209,5 +190,25 @@ function validateGet(event: APIGatewayEvent): Promise<any> {
         id: event.pathParameters.id
       });
     }
+  });
+}
+
+function validateUpdate(event: APIGatewayEvent): Promise<any> {
+  return new Promise((resolve, reject) => {
+    if (!event.pathParameters) {
+      return reject();
+    }
+    const input = JSON.parse(event.body || "{}");
+    if (!input.text || validator.isEmpty(input.text)) {
+      return reject();
+    }
+    if (!input.checked || !validator.isBoolean(input.checked)) {
+      return reject();
+    }
+    resolve({
+      id: event.pathParameters.id,
+      text: input.text,
+      checked: input.checked
+    });
   });
 }
