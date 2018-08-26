@@ -7,29 +7,30 @@ export const create: Handler = (
   _: Context,
   cb: Callback
 ) => {
-  const input = JSON.parse(event.body || "{}");
-  if (!input.text || validator.isEmpty(input.text)) {
-    console.error("Validation Failed");
-    cb(null, {
-      statusCode: 400,
-      body: JSON.stringify({
-        message: "Couldn't create the todo item."
-      })
-    });
-    return;
-  }
-  new Todos()
-    .create(input.text)
-    .then(todo => {
-      cb(null, {
-        statusCode: 200,
-        body: JSON.stringify(todo)
-      });
+  validateCreate(event)
+    .then(input => {
+      new Todos()
+        .create(input.text)
+        .then(todo => {
+          cb(null, {
+            statusCode: 200,
+            body: JSON.stringify(todo)
+          });
+        })
+        .catch(error => {
+          console.error(error);
+          cb(null, {
+            statusCode: error.statusCode || 501,
+            body: JSON.stringify({
+              message: "Couldn't create the todo item."
+            })
+          });
+        });
     })
-    .catch(error => {
-      console.error(error);
+    .catch(() => {
+      console.error("Validation Failed");
       cb(null, {
-        statusCode: error.statusCode || 501,
+        statusCode: 400,
         body: JSON.stringify({
           message: "Couldn't create the todo item."
         })
@@ -66,28 +67,30 @@ export const get: Handler = (
   _: Context,
   cb: Callback
 ) => {
-  if (!event.pathParameters) {
-    console.error("Validation Failed");
-    cb(null, {
-      statusCode: 400,
-      body: JSON.stringify({
-        message: "Couldn't fetch the todo item."
-      })
-    });
-    return;
-  }
-  new Todos()
-    .get(event.pathParameters.id)
-    .then(todo => {
-      cb(null, {
-        statusCode: 200,
-        body: JSON.stringify(todo)
-      });
+  validateGet(event)
+    .then(input => {
+      new Todos()
+        .get(input.id)
+        .then(todo => {
+          cb(null, {
+            statusCode: 200,
+            body: JSON.stringify(todo)
+          });
+        })
+        .catch(error => {
+          console.error(error);
+          cb(null, {
+            statusCode: error.statusCode || 501,
+            body: JSON.stringify({
+              message: "Couldn't fetch the todo item."
+            })
+          });
+        });
     })
-    .catch(error => {
-      console.error(error);
+    .catch(() => {
+      console.error("Validation Failed");
       cb(null, {
-        statusCode: error.statusCode || 501,
+        statusCode: 400,
         body: JSON.stringify({
           message: "Couldn't fetch the todo item."
         })
@@ -100,49 +103,30 @@ export const update: Handler = (
   _: Context,
   cb: Callback
 ) => {
-  if (!event.pathParameters) {
-    console.error("Validation Failed");
-    cb(null, {
-      statusCode: 400,
-      body: JSON.stringify({
-        message: "Couldn't update the todo item. id"
-      })
-    });
-    return;
-  }
-  const input = JSON.parse(event.body || "{}");
-  if (!input.text || validator.isEmpty(input.text)) {
-    console.error("Validation Failed");
-    cb(null, {
-      statusCode: 400,
-      body: JSON.stringify({
-        message: "Couldn't update the todo item. text"
-      })
-    });
-    return;
-  }
-  if (!input.checked || !validator.isBoolean(input.checked)) {
-    console.error("Validation Failed");
-    cb(null, {
-      statusCode: 400,
-      body: JSON.stringify({
-        message: "Couldn't update the todo item. checked"
-      })
-    });
-    return;
-  }
-  new Todos()
-    .update(event.pathParameters.id, input.text, input.checked)
-    .then(todo => {
-      cb(null, {
-        statusCode: 200,
-        body: JSON.stringify(todo)
-      });
+  validateUpdate(event)
+    .then(input => {
+      new Todos()
+        .update(input.id, input.text, input.checked)
+        .then(todo => {
+          cb(null, {
+            statusCode: 200,
+            body: JSON.stringify(todo)
+          });
+        })
+        .catch(error => {
+          console.error(error);
+          cb(null, {
+            statusCode: error.statusCode || 501,
+            body: JSON.stringify({
+              message: "Couldn't update the todo item."
+            })
+          });
+        });
     })
-    .catch(error => {
-      console.error(error);
+    .catch(() => {
+      console.error("Validation Failed");
       cb(null, {
-        statusCode: error.statusCode || 501,
+        statusCode: 400,
         body: JSON.stringify({
           message: "Couldn't update the todo item."
         })
@@ -155,31 +139,97 @@ export const destroy: Handler = (
   _: Context,
   cb: Callback
 ) => {
-  if (!event.pathParameters) {
-    console.error("Validation Failed");
-    cb(null, {
-      statusCode: 400,
-      body: JSON.stringify({
-        message: "Couldn't remove the todo item."
-      })
-    });
-    return;
-  }
-  new Todos()
-    .delete(event.pathParameters.id)
-    .then(() => {
-      cb(null, {
-        statusCode: 200,
-        body: JSON.stringify({})
-      });
+  validateDestroy(event)
+    .then(input => {
+      new Todos()
+        .delete(input.id)
+        .then(() => {
+          cb(null, {
+            statusCode: 200,
+            body: JSON.stringify({})
+          });
+        })
+        .catch(error => {
+          console.error(error);
+          cb(null, {
+            statusCode: error.statusCode || 501,
+            body: JSON.stringify({
+              message: "Couldn't remove the todo item."
+            })
+          });
+        });
     })
-    .catch(error => {
-      console.error(error);
+    .catch(() => {
+      console.error("Validation Failed");
       cb(null, {
-        statusCode: error.statusCode || 501,
+        statusCode: 400,
         body: JSON.stringify({
           message: "Couldn't remove the todo item."
         })
       });
     });
 };
+
+function validateCreate(event: APIGatewayEvent): Promise<any> {
+  return new Promise((resolve, reject) => {
+    const input = JSON.parse(event.body || "{}");
+    if (!("text" in input) || validator.isEmpty(input.text)) {
+      reject();
+    } else {
+      resolve({
+        text: input.text
+      });
+    }
+  });
+}
+
+function validateGet(event: APIGatewayEvent): Promise<any> {
+  return new Promise((resolve, reject) => {
+    if (!event.pathParameters) {
+      return reject();
+    }
+    if (!("id" in event.pathParameters)) {
+      return reject();
+    }
+    resolve({
+      id: event.pathParameters.id
+    });
+  });
+}
+
+function validateUpdate(event: APIGatewayEvent): Promise<any> {
+  return new Promise((resolve, reject) => {
+    if (!event.pathParameters) {
+      return reject();
+    }
+    if (!("id" in event.pathParameters)) {
+      return reject();
+    }
+    const input = JSON.parse(event.body || "{}");
+    if (!("text" in input) || validator.isEmpty(input.text)) {
+      return reject();
+    }
+    if (!("checked" in input) || !validator.isBoolean(input.checked)) {
+      return reject();
+    }
+    resolve({
+      id: event.pathParameters.id,
+      text: input.text,
+      checked: input.checked
+    });
+  });
+}
+
+function validateDestroy(event: APIGatewayEvent): Promise<any> {
+  return new Promise((resolve, reject) => {
+    if (!event.pathParameters) {
+      return reject();
+    }
+    if (!("id" in event.pathParameters)) {
+      return reject();
+    }
+    resolve({
+      id: event.pathParameters.id
+    });
+  });
+}
