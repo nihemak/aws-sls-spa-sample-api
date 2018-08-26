@@ -93,40 +93,27 @@ export const update: Handler = async (
   }
 };
 
-export const destroy: Handler = (
+export const destroy: Handler = async (
   event: APIGatewayEvent,
   _: Context,
   cb: Callback
 ) => {
-  validateDestroy(event)
-    .then(input => {
-      new Todos()
-        .delete(input.id)
-        .then(() => {
-          cb(null, {
-            statusCode: 200,
-            body: JSON.stringify({})
-          });
-        })
-        .catch(error => {
-          console.error(error);
-          cb(null, {
-            statusCode: error.statusCode || 501,
-            body: JSON.stringify({
-              message: "Couldn't remove the todo item."
-            })
-          });
-        });
-    })
-    .catch(() => {
-      console.error("Validation Failed");
-      cb(null, {
-        statusCode: 400,
-        body: JSON.stringify({
-          message: "Couldn't remove the todo item."
-        })
-      });
+  try {
+    let input = await validateDestroy(event);
+    await new Todos().delete(input.id);
+    cb(null, {
+      statusCode: 200,
+      body: JSON.stringify({})
     });
+  } catch (error) {
+    console.error(error);
+    cb(null, {
+      statusCode: error.statusCode || 501,
+      body: JSON.stringify({
+        message: "Couldn't remove the todo item."
+      })
+    });
+  }
 };
 
 function validateCreate(event: APIGatewayEvent): Promise<any> {
@@ -196,10 +183,14 @@ function validateUpdate(event: APIGatewayEvent): Promise<any> {
 function validateDestroy(event: APIGatewayEvent): Promise<any> {
   return new Promise((resolve, reject) => {
     if (!event.pathParameters) {
-      return reject();
+      return reject({
+        statusCode: 400
+      });
     }
     if (!("id" in event.pathParameters)) {
-      return reject();
+      return reject({
+        statusCode: 400
+      });
     }
     resolve({
       id: event.pathParameters.id
