@@ -1,5 +1,5 @@
 import { APIGatewayEvent, Callback, Context, Handler } from "aws-lambda";
-import * as validator from "validator";
+import { AssocValidator } from "../utils/AssocValidator";
 import { Todos } from "../models/Todos";
 
 export const create: Handler = async (
@@ -8,8 +8,10 @@ export const create: Handler = async (
   cb: Callback
 ) => {
   try {
-    let input = await validateCreate(event);
-    let todo = await new Todos().create(input.text);
+    const input = await validate(event, {
+      text: ["required", "string"]
+    });
+    const todo = await new Todos().create(input.text);
     cb(null, {
       statusCode: 200,
       body: JSON.stringify(todo)
@@ -19,7 +21,8 @@ export const create: Handler = async (
     cb(null, {
       statusCode: error.statusCode || 501,
       body: JSON.stringify({
-        message: "Couldn't create the todo item."
+        message: "Couldn't create the todo item.",
+        errors: error.errors
       })
     });
   }
@@ -31,7 +34,7 @@ export const list: Handler = async (
   cb: Callback
 ) => {
   try {
-    let todos = await new Todos().all();
+    const todos = await new Todos().all();
     cb(null, {
       statusCode: 200,
       body: JSON.stringify(todos)
@@ -41,7 +44,8 @@ export const list: Handler = async (
     cb(null, {
       statusCode: error.statusCode || 501,
       body: JSON.stringify({
-        message: "Couldn't fetch the todos."
+        message: "Couldn't fetch the todos.",
+        errors: error.errors
       })
     });
   }
@@ -53,8 +57,10 @@ export const get: Handler = async (
   cb: Callback
 ) => {
   try {
-    let input = await validateGet(event);
-    let todo = await new Todos().get(input.id);
+    const input = await validate(event, {
+      id: ["required", "string"]
+    });
+    const todo = await new Todos().get(input.id);
     cb(null, {
       statusCode: 200,
       body: JSON.stringify(todo)
@@ -64,7 +70,8 @@ export const get: Handler = async (
     cb(null, {
       statusCode: error.statusCode || 501,
       body: JSON.stringify({
-        message: "Couldn't fetch the todo item."
+        message: "Couldn't fetch the todo item.",
+        errors: error.errors
       })
     });
   }
@@ -76,8 +83,12 @@ export const update: Handler = async (
   cb: Callback
 ) => {
   try {
-    let input = await validateUpdate(event);
-    let todo = await new Todos().update(input.id, input.text, input.checked);
+    const input = await validate(event, {
+      id: ["required", "string"],
+      text: ["required", "string"],
+      checked: ["required", "boolean"]
+    });
+    const todo = await new Todos().update(input.id, input.text, input.checked);
     cb(null, {
       statusCode: 200,
       body: JSON.stringify(todo)
@@ -87,7 +98,8 @@ export const update: Handler = async (
     cb(null, {
       statusCode: error.statusCode || 501,
       body: JSON.stringify({
-        message: "Couldn't update the todo item."
+        message: "Couldn't update the todo item.",
+        errors: error.errors
       })
     });
   }
@@ -99,7 +111,9 @@ export const destroy: Handler = async (
   cb: Callback
 ) => {
   try {
-    let input = await validateDestroy(event);
+    const input = await validate(event, {
+      id: ["required", "string"]
+    });
     await new Todos().delete(input.id);
     cb(null, {
       statusCode: 200,
@@ -110,90 +124,37 @@ export const destroy: Handler = async (
     cb(null, {
       statusCode: error.statusCode || 501,
       body: JSON.stringify({
-        message: "Couldn't remove the todo item."
+        message: "Couldn't remove the todo item.",
+        errors: error.errors
       })
     });
   }
 };
 
-function validateCreate(event: APIGatewayEvent): Promise<any> {
+function validate(
+  event: APIGatewayEvent,
+  rules: { [field: string]: string[] }
+): Promise<{ [field: string]: any }> {
   return new Promise((resolve, reject) => {
-    const input = JSON.parse(event.body || "{}");
-    if (!("text" in input) || validator.isEmpty(input.text)) {
-      reject({
-        statusCode: 400
-      });
-    } else {
-      resolve({
-        text: input.text
-      });
+    let assoc: { [field: string]: any } = {};
+    if (event.pathParameters) {
+      assoc = Object.assign(assoc, event.pathParameters);
     }
-  });
-}
+    assoc = Object.assign(assoc, JSON.parse(event.body || "{}"));
 
-function validateGet(event: APIGatewayEvent): Promise<any> {
-  return new Promise((resolve, reject) => {
-    if (!event.pathParameters) {
+    const errors = AssocValidator.validate(assoc, rules);
+    const errorFields = Object.keys(errors);
+    if (errorFields.length > 0) {
       return reject({
-        statusCode: 400
+        statusCode: 400,
+        errors: errorFields.map(function(field: string) {
+          return {
+            field: field,
+            message: errors[field]
+          };
+        })
       });
     }
-    if (!("id" in event.pathParameters)) {
-      return reject({
-        statusCode: 400
-      });
-    }
-    resolve({
-      id: event.pathParameters.id
-    });
-  });
-}
-
-function validateUpdate(event: APIGatewayEvent): Promise<any> {
-  return new Promise((resolve, reject) => {
-    if (!event.pathParameters) {
-      return reject({
-        statusCode: 400
-      });
-    }
-    if (!("id" in event.pathParameters)) {
-      return reject({
-        statusCode: 400
-      });
-    }
-    const input = JSON.parse(event.body || "{}");
-    if (!("text" in input) || validator.isEmpty(input.text)) {
-      return reject({
-        statusCode: 400
-      });
-    }
-    if (!("checked" in input) || !validator.isBoolean(input.checked)) {
-      return reject({
-        statusCode: 400
-      });
-    }
-    resolve({
-      id: event.pathParameters.id,
-      text: input.text,
-      checked: input.checked
-    });
-  });
-}
-
-function validateDestroy(event: APIGatewayEvent): Promise<any> {
-  return new Promise((resolve, reject) => {
-    if (!event.pathParameters) {
-      return reject({
-        statusCode: 400
-      });
-    }
-    if (!("id" in event.pathParameters)) {
-      return reject({
-        statusCode: 400
-      });
-    }
-    resolve({
-      id: event.pathParameters.id
-    });
+    return resolve(assoc);
   });
 }
