@@ -14,7 +14,7 @@
     "lint-fix": "npm run docker-exec-sls -- node_modules/tslint/bin/tslint -c ./tslint.json --project . --fix **/*.ts",
     "webpack": "npm run docker-exec-sls -- serverless webpack",
     "test": "./node_modules/.bin/mocha -r ts-node/register src/test/**/*.spec.ts",
-    "test-all": "npm-run-all docker-down docker-up-dev lint webpack docker-down",
+    "test-all": "npm-run-all docker-down docker-up-dev lint webpack test docker-down",
     "offline": "npm run docker-exec-sls -- sls offline --host 0.0.0.0"
   },
   "dependencies": {
