@@ -10,6 +10,10 @@
       "esnext"
     ],
     "moduleResolution": "node",
+    "baseUrl": "./",
+    "paths": {
+      "*" : ["src/@types/*"]
+    },
     "typeRoots": [
       "node_modules/@types",
       "src/@types"
