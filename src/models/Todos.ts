@@ -114,12 +114,12 @@ export class Todos {
     });
   }
 
-  public createTable(): Promise<void> {
+  public createTable(rc: number, wc: number): Promise<void> {
     return new Promise((resolve, reject) => {
       let createOptions: { [key: string]: any } = {};
       createOptions[this.tableName()] = {
-        readCapacity: 1,
-        writeCapacity: 1
+        readCapacity: rc,
+        writeCapacity: wc
       };
       dynamo.createTables(createOptions, (error: any) => {
         if (error) {

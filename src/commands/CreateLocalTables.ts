@@ -1,7 +1,7 @@
 import { Todos } from "../models/Todos";
 
 new Todos()
-.createTable()
+.createTable(1 /* readCapacity */, 1 /* writeCapacity */)
 .then(() => {
   console.log("Tables has been created");
 })
