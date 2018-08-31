@@ -146,7 +146,9 @@ function validate(
     if (validation.fails()) {
       return reject({
         statusCode: 400,
-        errors: Object.keys(validation.errors.all()).map(function(field: string) {
+        errors: Object.keys(validation.errors.all()).map(function(
+          field: string
+        ) {
           return {
             field: field,
             message: validation.errors.first(field)
