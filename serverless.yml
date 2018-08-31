@@ -26,29 +26,29 @@ functions:
     handler: src/controllers/todos.create
     events:
       - http:
-          path: todos
+          path: v1/todos
           method: post
   list:
     handler: src/controllers/todos.list
     events:
       - http:
-          path: todos
+          path: v1/todos
           method: get
   get:
     handler: src/controllers/todos.get
     events:
       - http:
-          path: todos/{id}
+          path: v1/todos/{id}
           method: get
   update:
     handler: src/controllers/todos.update
     events:
       - http:
-          path: todos/{id}
+          path: v1/todos/{id}
           method: put
   delete:
     handler: src/controllers/todos.destroy
     events:
       - http:
-          path: todos/{id}
+          path: v1/todos/{id}
           method: delete
