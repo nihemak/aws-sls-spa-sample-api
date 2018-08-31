@@ -22,7 +22,6 @@
     "dynamodb": "^1.1.2",
     "joi": "^13.6.0",
     "source-map-support": "^0.5.0",
-    "validator": "^10.6.0",
     "validatorjs": "^3.14.2"
   },
   "devDependencies": {
@@ -31,7 +30,6 @@
     "@types/joi": "^13.4.3",
     "@types/mocha": "^5.2.5",
     "@types/node": "^8.0.57",
-    "@types/validator": "^9.4.1",
     "@types/validatorjs": "^3.7.1",
     "chai": "^4.1.2",
     "mocha": "^5.2.0",
