@@ -1,6 +1,6 @@
 import { APIGatewayEvent, Callback, Context, Handler } from "aws-lambda";
-import { AssocValidator } from "../utils/AssocValidator";
 import { Todos } from "../models/Todos";
+import * as Validator from "validatorjs";
 
 export const create: Handler = async (
   event: APIGatewayEvent,
@@ -142,15 +142,16 @@ function validate(
     }
     assoc = Object.assign(assoc, JSON.parse(event.body || "{}"));
 
-    const errors = AssocValidator.validate(assoc, rules);
-    const errorFields = Object.keys(errors);
-    if (errorFields.length > 0) {
+    const validation = new Validator(assoc, rules);
+    if (validation.fails()) {
       return reject({
         statusCode: 400,
-        errors: errorFields.map(function(field: string) {
+        errors: Object.keys(validation.errors.all()).map(function(
+          field: string
+        ) {
           return {
             field: field,
-            message: errors[field]
+            message: validation.errors.first(field)
           };
         })
       });
