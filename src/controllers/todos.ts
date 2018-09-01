@@ -2,136 +2,88 @@ import { APIGatewayEvent, Callback, Context } from "aws-lambda";
 import middy from "@middy/core";
 import httpEventNormalizer from "@middy/http-event-normalizer";
 import httpJsonBodyParser from "@middy/http-json-body-parser";
-import { Todos } from "../models/Todos";
+import { errorHandler } from "../middlewares/error-handler";
 import * as Validator from "validatorjs";
+import { Todos } from "../models/Todos";
 
 export const create: middy.IMiddy = middy(
   async (event: APIGatewayEvent, _: Context, cb: Callback) => {
-    try {
-      const input = await validate(event, {
-        text: ["required", "string"]
-      });
-      const todo = await new Todos().create(input.text);
-      cb(null, {
-        statusCode: 200,
-        body: JSON.stringify(todo)
-      });
-    } catch (error) {
-      console.error(error);
-      cb(null, {
-        statusCode: error.statusCode || 501,
-        body: JSON.stringify({
-          message: "Couldn't create the todo item.",
-          errors: error.errors
-        })
-      });
-    }
+    const input = await validate(event, {
+      text: ["required", "string"]
+    });
+    const todo = await new Todos().create(input.text);
+    cb(null, {
+      statusCode: 200,
+      body: JSON.stringify(todo)
+    });
   }
-);
-create.use(httpEventNormalizer()).use(httpJsonBodyParser());
+)
+  .use(httpEventNormalizer())
+  .use(httpJsonBodyParser())
+  .use(errorHandler());
 
 export const list: middy.IMiddy = middy(
   async (_event: APIGatewayEvent, _: Context, cb: Callback) => {
-    try {
-      const todos = await new Todos().all();
-      cb(null, {
-        statusCode: 200,
-        body: JSON.stringify(todos)
-      });
-    } catch (error) {
-      console.error(error);
-      cb(null, {
-        statusCode: error.statusCode || 501,
-        body: JSON.stringify({
-          message: "Couldn't fetch the todos.",
-          errors: error.errors
-        })
-      });
-    }
+    const todos = await new Todos().all();
+    cb(null, {
+      statusCode: 200,
+      body: JSON.stringify(todos)
+    });
   }
-);
-list.use(httpEventNormalizer()).use(httpJsonBodyParser());
+)
+  .use(httpEventNormalizer())
+  .use(httpJsonBodyParser())
+  .use(errorHandler());
 
 export const get: middy.IMiddy = middy(
   async (event: APIGatewayEvent, _: Context, cb: Callback) => {
-    try {
-      const input = await validate(event, {
-        id: ["required", "string"]
-      });
-      const todo = await new Todos().get(input.id);
-      cb(null, {
-        statusCode: 200,
-        body: JSON.stringify(todo)
-      });
-    } catch (error) {
-      console.error(error);
-      cb(null, {
-        statusCode: error.statusCode || 501,
-        body: JSON.stringify({
-          message: "Couldn't fetch the todo item.",
-          errors: error.errors
-        })
-      });
-    }
+    const input = await validate(event, {
+      id: ["required", "string"]
+    });
+    const todo = await new Todos().get(input.id);
+    cb(null, {
+      statusCode: 200,
+      body: JSON.stringify(todo)
+    });
   }
-);
-get.use(httpEventNormalizer()).use(httpJsonBodyParser());
+)
+  .use(httpEventNormalizer())
+  .use(httpJsonBodyParser())
+  .use(errorHandler());
 
 export const update: middy.IMiddy = middy(
   async (event: APIGatewayEvent, _: Context, cb: Callback) => {
-    try {
-      const input = await validate(event, {
-        id: ["required", "string"],
-        text: ["required", "string"],
-        checked: ["required", "boolean"]
-      });
-      const todo = await new Todos().update(
-        input.id,
-        input.text,
-        input.checked
-      );
-      cb(null, {
-        statusCode: 200,
-        body: JSON.stringify(todo)
-      });
-    } catch (error) {
-      console.error(error);
-      cb(null, {
-        statusCode: error.statusCode || 501,
-        body: JSON.stringify({
-          message: "Couldn't update the todo item.",
-          errors: error.errors
-        })
-      });
-    }
+    const input = await validate(event, {
+      id: ["required", "string"],
+      text: ["required", "string"],
+      checked: ["required", "boolean"]
+    });
+    const todo = await new Todos().update(input.id, input.text, input.checked);
+    cb(null, {
+      statusCode: 200,
+      body: JSON.stringify(todo)
+    });
   }
-);
-update.use(httpEventNormalizer()).use(httpJsonBodyParser());
+)
+  .use(httpEventNormalizer())
+  .use(httpJsonBodyParser())
+  .use(errorHandler());
 
 export const destroy: middy.IMiddy = middy(
   async (event: APIGatewayEvent, _: Context, cb: Callback) => {
-    try {
-      const input = await validate(event, {
-        id: ["required", "string"]
-      });
-      await new Todos().delete(input.id);
-      cb(null, {
-        statusCode: 200,
-        body: JSON.stringify({})
-      });
-    } catch (error) {
-      console.error(error);
-      cb(null, {
-        statusCode: error.statusCode || 501,
-        body: JSON.stringify({
-          message: "Couldn't remove the todo item.",
-          errors: error.errors
-        })
-      });
-    }
+    const input = await validate(event, {
+      id: ["required", "string"]
+    });
+    await new Todos().delete(input.id);
+    cb(null, {
+      statusCode: 200,
+      body: JSON.stringify({})
+    });
   }
-);
-destroy.use(httpEventNormalizer()).use(httpJsonBodyParser());
+)
+  .use(httpEventNormalizer())
+  .use(httpJsonBodyParser())
+  .use(errorHandler());
 
 function validate(
   event: APIGatewayEvent,
@@ -148,6 +100,7 @@ function validate(
     if (validation.fails()) {
       return reject({
         statusCode: 400,
+        message: "There is an error in the parameter.",
         errors: Object.keys(validation.errors.all()).map(function(
           field: string
         ) {
