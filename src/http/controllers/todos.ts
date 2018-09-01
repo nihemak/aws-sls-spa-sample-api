@@ -4,7 +4,7 @@ import httpEventNormalizer from "@middy/http-event-normalizer";
 import httpJsonBodyParser from "@middy/http-json-body-parser";
 import { errorHandler } from "../middlewares/error-handler";
 import { requestValidator } from "../middlewares/request-validator";
-import { Todos } from "../models/Todos";
+import { Todos } from "../../models/Todos";
 
 export const create: middy.IMiddy = middy(
   async (event: APIGatewayEvent, _: Context, cb: Callback) => {

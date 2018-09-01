@@ -17,37 +17,37 @@ provider:
 
 functions:
   hello:
-    handler: src/controllers/hellos.hello
+    handler: src/http/controllers/hellos.hello
     events:
       - http:
           method: get
           path: hello
   create:
-    handler: src/controllers/todos.create
+    handler: src/http/controllers/todos.create
     events:
       - http:
           path: v1/todos
           method: post
   list:
-    handler: src/controllers/todos.list
+    handler: src/http/controllers/todos.list
     events:
       - http:
           path: v1/todos
           method: get
   get:
-    handler: src/controllers/todos.get
+    handler: src/http/controllers/todos.get
     events:
       - http:
           path: v1/todos/{id}
           method: get
   update:
-    handler: src/controllers/todos.update
+    handler: src/http/controllers/todos.update
     events:
       - http:
           path: v1/todos/{id}
           method: put
   delete:
-    handler: src/controllers/todos.destroy
+    handler: src/http/controllers/todos.destroy
     events:
       - http:
           path: v1/todos/{id}
