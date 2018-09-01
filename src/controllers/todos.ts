@@ -3,23 +3,24 @@ import middy from "@middy/core";
 import httpEventNormalizer from "@middy/http-event-normalizer";
 import httpJsonBodyParser from "@middy/http-json-body-parser";
 import { errorHandler } from "../middlewares/error-handler";
-import * as Validator from "validatorjs";
+import { requestValidator } from "../middlewares/request-validator";
 import { Todos } from "../models/Todos";
 
 export const create: middy.IMiddy = middy(
   async (event: APIGatewayEvent, _: Context, cb: Callback) => {
-    const input = await validate(event, {
-      text: ["required", "string"]
-    });
-    const todo = await new Todos().create(input.text);
+    const todo = await new Todos().create((event.body as any).text);
     cb(null, {
       statusCode: 200,
       body: JSON.stringify(todo)
     });
   }
 )
-  .use(httpEventNormalizer())
   .use(httpJsonBodyParser())
+  .use(
+    requestValidator({
+      text: ["required", "string"]
+    })
+  )
   .use(errorHandler());
 
 export const list: middy.IMiddy = middy(
@@ -37,10 +38,7 @@ export const list: middy.IMiddy = middy(
 
 export const get: middy.IMiddy = middy(
   async (event: APIGatewayEvent, _: Context, cb: Callback) => {
-    const input = await validate(event, {
-      id: ["required", "string"]
-    });
-    const todo = await new Todos().get(input.id);
+    const todo = await new Todos().get((event.pathParameters as any).id);
     cb(null, {
       statusCode: 200,
       body: JSON.stringify(todo)
@@ -48,17 +46,20 @@ export const get: middy.IMiddy = middy(
   }
 )
   .use(httpEventNormalizer())
-  .use(httpJsonBodyParser())
+  .use(
+    requestValidator({
+      id: ["required", "string"]
+    })
+  )
   .use(errorHandler());
 
 export const update: middy.IMiddy = middy(
   async (event: APIGatewayEvent, _: Context, cb: Callback) => {
-    const input = await validate(event, {
-      id: ["required", "string"],
-      text: ["required", "string"],
-      checked: ["required", "boolean"]
-    });
-    const todo = await new Todos().update(input.id, input.text, input.checked);
+    const todo = await new Todos().update(
+      (event.pathParameters as any).id,
+      (event.body as any).text,
+      (event.body as any).checked
+    );
     cb(null, {
       statusCode: 200,
       body: JSON.stringify(todo)
@@ -67,14 +68,18 @@ export const update: middy.IMiddy = middy(
 )
   .use(httpEventNormalizer())
   .use(httpJsonBodyParser())
+  .use(
+    requestValidator({
+      id: ["required", "string"],
+      text: ["required", "string"],
+      checked: ["required", "boolean"]
+    })
+  )
   .use(errorHandler());
 
 export const destroy: middy.IMiddy = middy(
   async (event: APIGatewayEvent, _: Context, cb: Callback) => {
-    const input = await validate(event, {
-      id: ["required", "string"]
-    });
-    await new Todos().delete(input.id);
+    await new Todos().delete((event.pathParameters as any).id);
     cb(null, {
       statusCode: 200,
       body: JSON.stringify({})
@@ -82,35 +87,9 @@ export const destroy: middy.IMiddy = middy(
   }
 )
   .use(httpEventNormalizer())
-  .use(httpJsonBodyParser())
+  .use(
+    requestValidator({
+      id: ["required", "string"]
+    })
+  )
   .use(errorHandler());
-
-function validate(
-  event: APIGatewayEvent,
-  rules: { [field: string]: string[] }
-): Promise<{ [field: string]: any }> {
-  return new Promise((resolve, reject) => {
-    let assoc: { [field: string]: any } = {};
-    if (event.pathParameters) {
-      assoc = Object.assign(assoc, event.pathParameters);
-    }
-    assoc = Object.assign((event.body as any) || {});
-
-    const validation = new Validator(assoc, rules);
-    if (validation.fails()) {
-      return reject({
-        statusCode: 400,
-        message: "There is an error in the parameter.",
-        errors: Object.keys(validation.errors.all()).map(function(
-          field: string
-        ) {
-          return {
-            field: field,
-            message: validation.errors.first(field)
-          };
-        })
-      });
-    }
-    return resolve(assoc);
-  });
-}
