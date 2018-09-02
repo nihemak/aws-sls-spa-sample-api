@@ -1,5 +1,5 @@
 import middy from "@middy/core";
-import * as Validator from "validatorjs";
+import Validator = require("validatorjs");
 
 export const requestValidator = (rules: { [field: string]: string[] }) => {
   return {
@@ -9,7 +9,7 @@ export const requestValidator = (rules: { [field: string]: string[] }) => {
       assoc = Object.assign(assoc, handler.event.pathParameters);
       const validation = new Validator(assoc, rules);
       if (validation.fails()) {
-        return Promise.reject({
+        return next({
           statusCode: 400,
           message: "There is an error in the parameter.",
           errors: Object.keys(validation.errors.all()).map(function(
