@@ -60,7 +60,7 @@ describe("http/controllers/todos", () => {
     }
   };
 
-  describe('#create', () => {
+  describe("#create", () => {
     it("should success response when success handler.", done => {
       const todoId = "b24bd9b3-9517-4c43-9d7e-858969ea9483";
       const todoText = "foo";
@@ -82,7 +82,10 @@ describe("http/controllers/todos", () => {
       container.rebind<ITodos>(TYPES.Todos).to(TodosMock);
 
       const event = {
-        body: { text: todoText }
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ text: todoText })
       };
 
       create(event, dummyContext, (err, response) => {
