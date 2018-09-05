@@ -1,7 +1,13 @@
 import { describe, it } from "mocha";
 import { assert } from "chai";
 import { Context } from "aws-lambda";
-import { create, list, get, update } from "../../../http/controllers/todos";
+import {
+  create,
+  list,
+  get,
+  update,
+  destroy
+} from "../../../http/controllers/todos";
 import { container, TYPES } from "../../../providers/inversify.config";
 import { injectable } from "inversify";
 import { Todos as ITodos } from "../../../models/Todos";
@@ -40,8 +46,11 @@ class TodosMock implements ITodos {
     return TodosMock.update(id, text, checked);
   }
 
-  public delete(_id: string): Promise<any> {
+  public static delete = (_id: string): Promise<any> => {
     return Promise.resolve({});
+  };
+  public delete(id: string): Promise<any> {
+    return TodosMock.delete(id);
   }
 
   public createTable(_rc: number, _wc: number): Promise<void> {
@@ -255,6 +264,36 @@ describe("http/controllers/todos", () => {
         assert.equal(body.checked, todo.checked);
         assert.equal(body.createdAt, todo.createdAt);
         assert.equal(body.updatedAt, todo.updatedAt);
+
+        done();
+      });
+    });
+  });
+
+  describe("#destroy", () => {
+    it("should success response when success handler.", done => {
+      const todo = {
+        id: "FD46591-5827-4678-BC5E-15C02B48BD4B"
+      };
+
+      const event = {
+        pathParameters: {
+          id: todo.id
+        }
+      };
+
+      TodosMock.delete = (id: string): Promise<any> => {
+        assert.equal(id, todo.id);
+
+        return Promise.resolve({});
+      };
+      container.rebind<ITodos>(TYPES.Todos).to(TodosMock);
+
+      destroy(event, dummyContext, (err, response) => {
+        assert.equal(err, null);
+
+        assert.equal(response.statusCode, 200);
+        assert.equal(response.body, "{}");
 
         done();
       });
