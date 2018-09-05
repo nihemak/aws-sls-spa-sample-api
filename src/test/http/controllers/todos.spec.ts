@@ -1,7 +1,7 @@
 import { describe, it } from "mocha";
 import { assert } from "chai";
 import { Context } from "aws-lambda";
-import { create } from "../../../http/controllers/todos";
+import { create, list } from "../../../http/controllers/todos";
 import { container, TYPES } from "../../../providers/inversify.config";
 import { injectable } from "inversify";
 import { Todos as ITodos } from "../../../models/Todos";
@@ -15,8 +15,11 @@ class TodosMock implements ITodos {
     return TodosMock.create(text);
   }
 
+  public static all = (): Promise<any> => {
+    return Promise.resolve([]);
+  };
   public all(): Promise<any> {
-    return Promise.resolve({});
+    return TodosMock.all();
   }
 
   public get(_id: string): Promise<any> {
@@ -99,6 +102,60 @@ describe("http/controllers/todos", () => {
         assert.equal(body.checked, todoChecked);
         assert.equal(body.createdAt, todoCreatedAt);
         assert.equal(body.updatedAt, todoUpdatedAt);
+
+        done();
+      });
+    });
+  });
+
+  describe("#list", () => {
+    it("should success response when success handler.", done => {
+      const todos: any = [];
+
+      const todo1 = {
+        text: "foo",
+        id: "FD46591-5827-4678-BC5E-15C02B48BD4B",
+        checked: true,
+        createdAt: 1536101188360,
+        updatedAt: 1536101199360
+      };
+      todos.push(todo1);
+
+      const todo2 = {
+        text: "bar",
+        id: "88D85019-AC42-408A-95FC-910E13CE79D8",
+        checked: false,
+        createdAt: 1536101177360,
+        updatedAt: 1536199199360
+      };
+      todos.push(todo2);
+
+      TodosMock.all = (): Promise<any> => {
+        return Promise.resolve(todos);
+      };
+      container.rebind<ITodos>(TYPES.Todos).to(TodosMock);
+
+      const event = {};
+
+      list(event, dummyContext, (err, response) => {
+        assert.equal(err, null);
+
+        assert.equal(response.statusCode, 200);
+
+        const body = JSON.parse(response.body);
+        assert.equal(body.length, 2);
+
+        assert.equal(body[0].text, todo1.text);
+        assert.equal(body[0].id, todo1.id);
+        assert.equal(body[0].checked, todo1.checked);
+        assert.equal(body[0].createdAt, todo1.createdAt);
+        assert.equal(body[0].updatedAt, todo1.updatedAt);
+
+        assert.equal(body[1].text, todo2.text);
+        assert.equal(body[1].id, todo2.id);
+        assert.equal(body[1].checked, todo2.checked);
+        assert.equal(body[1].createdAt, todo2.createdAt);
+        assert.equal(body[1].updatedAt, todo2.updatedAt);
 
         done();
       });
