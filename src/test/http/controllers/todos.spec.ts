@@ -1,7 +1,7 @@
 import { describe, it } from "mocha";
 import { assert } from "chai";
 import { Context } from "aws-lambda";
-import { create, list, get } from "../../../http/controllers/todos";
+import { create, list, get, update } from "../../../http/controllers/todos";
 import { container, TYPES } from "../../../providers/inversify.config";
 import { injectable } from "inversify";
 import { Todos as ITodos } from "../../../models/Todos";
@@ -29,8 +29,15 @@ class TodosMock implements ITodos {
     return TodosMock.get(id);
   }
 
-  public update(_id: string, _text: string, _checked: boolean): Promise<any> {
+  public static update = (
+    _id: string,
+    _text: string,
+    _checked: boolean
+  ): Promise<any> => {
     return Promise.resolve({});
+  };
+  public update(id: string, text: string, checked: boolean): Promise<any> {
+    return TodosMock.update(id, text, checked);
   }
 
   public delete(_id: string): Promise<any> {
@@ -185,6 +192,59 @@ describe("http/controllers/todos", () => {
       };
 
       get(event, dummyContext, (err, response) => {
+        assert.equal(err, null);
+
+        assert.equal(response.statusCode, 200);
+
+        const body = JSON.parse(response.body);
+        assert.equal(body.text, todo.text);
+        assert.equal(body.id, todo.id);
+        assert.equal(body.checked, todo.checked);
+        assert.equal(body.createdAt, todo.createdAt);
+        assert.equal(body.updatedAt, todo.updatedAt);
+
+        done();
+      });
+    });
+  });
+
+  describe("#update", () => {
+    it("should success response when success handler.", done => {
+      const todo = {
+        text: "foo",
+        id: "FD46591-5827-4678-BC5E-15C02B48BD4B",
+        checked: true,
+        createdAt: 1536101188360,
+        updatedAt: 1536101199360
+      };
+
+      TodosMock.update = (
+        id: string,
+        text: string,
+        checked: boolean
+      ): Promise<any> => {
+        assert.equal(id, todo.id);
+        assert.equal(text, todo.text);
+        assert.equal(checked, todo.checked);
+
+        return Promise.resolve(todo);
+      };
+      container.rebind<ITodos>(TYPES.Todos).to(TodosMock);
+
+      const event = {
+        headers: {
+          "Content-Type": "application/json"
+        },
+        pathParameters: {
+          id: todo.id
+        },
+        body: JSON.stringify({
+          text: todo.text,
+          checked: todo.checked
+        })
+      };
+
+      update(event, dummyContext, (err, response) => {
         assert.equal(err, null);
 
         assert.equal(response.statusCode, 200);
