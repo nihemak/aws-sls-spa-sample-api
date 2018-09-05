@@ -65,22 +65,18 @@ describe("http/controllers/todos", () => {
 
   describe("#create", () => {
     it("should success response when success handler.", done => {
-      const todoId = "b24bd9b3-9517-4c43-9d7e-858969ea9483";
-      const todoText = "foo";
-      const todoChecked = false;
-      const todoCreatedAt = 1536101150360;
-      const todoUpdatedAt = 1536101150362;
+      const todo = {
+        id: "b24bd9b3-9517-4c43-9d7e-858969ea9483",
+        text: "foo",
+        checked: false,
+        createdAt: 1536101150360,
+        updatedAt: 1536101150362
+      };
 
       TodosMock.create = (text: string): Promise<any> => {
-        assert.equal(text, todoText);
+        assert.equal(text, todo.text);
 
-        return Promise.resolve({
-          text: text,
-          id: todoId,
-          checked: todoChecked,
-          createdAt: todoCreatedAt,
-          updatedAt: todoUpdatedAt
-        });
+        return Promise.resolve(todo);
       };
       container.rebind<ITodos>(TYPES.Todos).to(TodosMock);
 
@@ -88,7 +84,7 @@ describe("http/controllers/todos", () => {
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({ text: todoText })
+        body: JSON.stringify({ text: todo.text })
       };
 
       create(event, dummyContext, (err, response) => {
@@ -97,11 +93,11 @@ describe("http/controllers/todos", () => {
         assert.equal(response.statusCode, 200);
 
         const body = JSON.parse(response.body);
-        assert.equal(body.text, todoText);
-        assert.equal(body.id, todoId);
-        assert.equal(body.checked, todoChecked);
-        assert.equal(body.createdAt, todoCreatedAt);
-        assert.equal(body.updatedAt, todoUpdatedAt);
+        assert.equal(body.text, todo.text);
+        assert.equal(body.id, todo.id);
+        assert.equal(body.checked, todo.checked);
+        assert.equal(body.createdAt, todo.createdAt);
+        assert.equal(body.updatedAt, todo.updatedAt);
 
         done();
       });
