@@ -4,11 +4,14 @@ import httpEventNormalizer from "@middy/http-event-normalizer";
 import httpJsonBodyParser from "@middy/http-json-body-parser";
 import { errorHandler } from "../middlewares/error-handler";
 import { requestValidator } from "../middlewares/request-validator";
+import { container, TYPES } from "../../providers/inversify.config";
 import { Todos } from "../../models/Todos";
 
 export const create: middy.IMiddy = middy(
   async (event: APIGatewayEvent, _: Context, cb: Callback) => {
-    const todo = await new Todos().create((event.body as any).text);
+    const todo = await container
+      .get<Todos>(TYPES.Todos)
+      .create((event.body as any).text);
     cb(null, {
       statusCode: 200,
       body: JSON.stringify(todo)
@@ -25,7 +28,7 @@ export const create: middy.IMiddy = middy(
 
 export const list: middy.IMiddy = middy(
   async (_event: APIGatewayEvent, _: Context, cb: Callback) => {
-    const todos = await new Todos().all();
+    const todos = await container.get<Todos>(TYPES.Todos).all();
     cb(null, {
       statusCode: 200,
       body: JSON.stringify(todos)
@@ -38,7 +41,9 @@ export const list: middy.IMiddy = middy(
 
 export const get: middy.IMiddy = middy(
   async (event: APIGatewayEvent, _: Context, cb: Callback) => {
-    const todo = await new Todos().get((event.pathParameters as any).id);
+    const todo = await container
+      .get<Todos>(TYPES.Todos)
+      .get((event.pathParameters as any).id);
     cb(null, {
       statusCode: 200,
       body: JSON.stringify(todo)
@@ -55,11 +60,13 @@ export const get: middy.IMiddy = middy(
 
 export const update: middy.IMiddy = middy(
   async (event: APIGatewayEvent, _: Context, cb: Callback) => {
-    const todo = await new Todos().update(
-      (event.pathParameters as any).id,
-      (event.body as any).text,
-      (event.body as any).checked
-    );
+    const todo = await container
+      .get<Todos>(TYPES.Todos)
+      .update(
+        (event.pathParameters as any).id,
+        (event.body as any).text,
+        (event.body as any).checked
+      );
     cb(null, {
       statusCode: 200,
       body: JSON.stringify(todo)
@@ -79,7 +86,9 @@ export const update: middy.IMiddy = middy(
 
 export const destroy: middy.IMiddy = middy(
   async (event: APIGatewayEvent, _: Context, cb: Callback) => {
-    await new Todos().delete((event.pathParameters as any).id);
+    await container
+      .get<Todos>(TYPES.Todos)
+      .delete((event.pathParameters as any).id);
     cb(null, {
       statusCode: 200,
       body: JSON.stringify({})

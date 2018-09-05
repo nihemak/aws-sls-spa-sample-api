@@ -7,11 +7,19 @@
     "sourceMap": true,
     "target": "es6",
     "lib": [
-      "esnext"
+      "esnext",
+      "es6",
+      "dom"
+    ],
+    "types": [
+      "node",
+      "reflect-metadata"
     ],
     "moduleResolution": "node",
     "module": "commonjs",
     "esModuleInterop": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true,
     "baseUrl": "./",
     "paths": {
       "*" : ["src/@types/*"]

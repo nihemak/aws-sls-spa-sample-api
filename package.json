@@ -24,7 +24,9 @@
     "@middy/http-event-normalizer": "^1.0.0-alpha.16",
     "@middy/http-json-body-parser": "^1.0.0-alpha.16",
     "dynamodb": "^1.1.2",
+    "inversify": "^4.13.0",
     "joi": "^13.6.0",
+    "reflect-metadata": "^0.1.12",
     "source-map-support": "^0.5.0",
     "validatorjs": "^3.14.2"
   },
