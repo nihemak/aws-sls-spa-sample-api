@@ -83,19 +83,19 @@ describe("http/controllers/todos", () => {
         updatedAt: 1536101150362
       };
 
-      TodosMock.create = (text: string): Promise<any> => {
-        assert.equal(text, todo.text);
-
-        return Promise.resolve(todo);
-      };
-      container.rebind<ITodos>(TYPES.Todos).to(TodosMock);
-
       const event = {
         headers: {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({ text: todo.text })
       };
+
+      TodosMock.create = (text: string): Promise<any> => {
+        assert.equal(text, todo.text);
+
+        return Promise.resolve(todo);
+      };
+      container.rebind<ITodos>(TYPES.Todos).to(TodosMock);
 
       create(event, dummyContext, (err, response) => {
         assert.equal(err, null);
@@ -136,12 +136,12 @@ describe("http/controllers/todos", () => {
       };
       todos.push(todo2);
 
+      const event = {};
+
       TodosMock.all = (): Promise<any> => {
         return Promise.resolve(todos);
       };
       container.rebind<ITodos>(TYPES.Todos).to(TodosMock);
-
-      const event = {};
 
       list(event, dummyContext, (err, response) => {
         assert.equal(err, null);
@@ -178,18 +178,18 @@ describe("http/controllers/todos", () => {
         updatedAt: 1536101199360
       };
 
+      const event = {
+        pathParameters: {
+          id: todo.id
+        }
+      };
+
       TodosMock.get = (id: string): Promise<any> => {
         assert.equal(id, todo.id);
 
         return Promise.resolve(todo);
       };
       container.rebind<ITodos>(TYPES.Todos).to(TodosMock);
-
-      const event = {
-        pathParameters: {
-          id: todo.id
-        }
-      };
 
       get(event, dummyContext, (err, response) => {
         assert.equal(err, null);
@@ -218,19 +218,6 @@ describe("http/controllers/todos", () => {
         updatedAt: 1536101199360
       };
 
-      TodosMock.update = (
-        id: string,
-        text: string,
-        checked: boolean
-      ): Promise<any> => {
-        assert.equal(id, todo.id);
-        assert.equal(text, todo.text);
-        assert.equal(checked, todo.checked);
-
-        return Promise.resolve(todo);
-      };
-      container.rebind<ITodos>(TYPES.Todos).to(TodosMock);
-
       const event = {
         headers: {
           "Content-Type": "application/json"
@@ -243,6 +230,19 @@ describe("http/controllers/todos", () => {
           checked: todo.checked
         })
       };
+
+      TodosMock.update = (
+        id: string,
+        text: string,
+        checked: boolean
+      ): Promise<any> => {
+        assert.equal(id, todo.id);
+        assert.equal(text, todo.text);
+        assert.equal(checked, todo.checked);
+
+        return Promise.resolve(todo);
+      };
+      container.rebind<ITodos>(TYPES.Todos).to(TodosMock);
 
       update(event, dummyContext, (err, response) => {
         assert.equal(err, null);
