@@ -2,6 +2,7 @@ import { APIGatewayEvent, Callback, Context } from "aws-lambda";
 import middy from "@middy/core";
 import httpEventNormalizer from "@middy/http-event-normalizer";
 import httpJsonBodyParser from "@middy/http-json-body-parser";
+import cors from "@middy/http-cors";
 import { errorHandler } from "../middlewares/error-handler";
 import { requestValidator } from "../middlewares/request-validator";
 import { container, TYPES } from "../../providers/inversify.config";
@@ -18,6 +19,14 @@ export const create: middy.IMiddy = middy(
     });
   }
 )
+  .use(
+    cors({
+      origin: process.env.CORS || "*",
+      headers:
+        "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,Cache-control,Pragma,X-Frame-Options",
+      credentials: false
+    })
+  )
   .use(httpJsonBodyParser())
   .use(
     requestValidator({
@@ -35,6 +44,14 @@ export const list: middy.IMiddy = middy(
     });
   }
 )
+  .use(
+    cors({
+      origin: process.env.CORS || "*",
+      headers:
+        "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,Cache-control,Pragma,X-Frame-Options",
+      credentials: false
+    })
+  )
   .use(httpEventNormalizer())
   .use(httpJsonBodyParser())
   .use(errorHandler());
@@ -50,6 +67,14 @@ export const get: middy.IMiddy = middy(
     });
   }
 )
+  .use(
+    cors({
+      origin: process.env.CORS || "*",
+      headers:
+        "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,Cache-control,Pragma,X-Frame-Options",
+      credentials: false
+    })
+  )
   .use(httpEventNormalizer())
   .use(
     requestValidator({
@@ -73,6 +98,14 @@ export const update: middy.IMiddy = middy(
     });
   }
 )
+  .use(
+    cors({
+      origin: process.env.CORS || "*",
+      headers:
+        "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,Cache-control,Pragma,X-Frame-Options",
+      credentials: false
+    })
+  )
   .use(httpEventNormalizer())
   .use(httpJsonBodyParser())
   .use(
@@ -95,6 +128,14 @@ export const destroy: middy.IMiddy = middy(
     });
   }
 )
+  .use(
+    cors({
+      origin: process.env.CORS || "*",
+      headers:
+        "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,Cache-control,Pragma,X-Frame-Options",
+      credentials: false
+    })
+  )
   .use(httpEventNormalizer())
   .use(
     requestValidator({

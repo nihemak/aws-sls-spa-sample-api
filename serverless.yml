@@ -11,6 +11,8 @@ provider:
   runtime: nodejs8.10
   region: ap-northeast-1
   stage: ${env:STAGE_ENV}
+  environment:
+    CORS: ${env:CORS}
   role: ${env:LAMBDA_ROLE}
   deploymentBucket:
     name: ${env:DEPLOY_BUCKET}
