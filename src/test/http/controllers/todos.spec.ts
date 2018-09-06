@@ -96,6 +96,7 @@ describe("http/controllers/todos", () => {
         headers: {
           "Content-Type": "application/json"
         },
+        httpMethod: "POST",
         body: JSON.stringify({ text: todo.text })
       };
 
@@ -110,6 +111,11 @@ describe("http/controllers/todos", () => {
         assert.equal(err, null);
 
         assert.equal(response.statusCode, 200);
+        assert.equal(
+          response.headers["Access-Control-Allow-Headers"],
+          "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,Cache-control,Pragma,X-Frame-Options"
+        );
+        assert.equal(response.headers["Access-Control-Allow-Origin"], "*");
 
         const body = JSON.parse(response.body);
         assert.equal(body.text, todo.text);
@@ -145,7 +151,9 @@ describe("http/controllers/todos", () => {
       };
       todos.push(todo2);
 
-      const event = {};
+      const event = {
+        httpMethod: "GET"
+      };
 
       TodosMock.all = (): Promise<any> => {
         return Promise.resolve(todos);
@@ -156,6 +164,11 @@ describe("http/controllers/todos", () => {
         assert.equal(err, null);
 
         assert.equal(response.statusCode, 200);
+        assert.equal(
+          response.headers["Access-Control-Allow-Headers"],
+          "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,Cache-control,Pragma,X-Frame-Options"
+        );
+        assert.equal(response.headers["Access-Control-Allow-Origin"], "*");
 
         const body = JSON.parse(response.body);
         assert.equal(body.length, 2);
@@ -188,6 +201,7 @@ describe("http/controllers/todos", () => {
       };
 
       const event = {
+        httpMethod: "GET",
         pathParameters: {
           id: todo.id
         }
@@ -204,6 +218,11 @@ describe("http/controllers/todos", () => {
         assert.equal(err, null);
 
         assert.equal(response.statusCode, 200);
+        assert.equal(
+          response.headers["Access-Control-Allow-Headers"],
+          "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,Cache-control,Pragma,X-Frame-Options"
+        );
+        assert.equal(response.headers["Access-Control-Allow-Origin"], "*");
 
         const body = JSON.parse(response.body);
         assert.equal(body.text, todo.text);
@@ -231,6 +250,7 @@ describe("http/controllers/todos", () => {
         headers: {
           "Content-Type": "application/json"
         },
+        httpMethod: "PUT",
         pathParameters: {
           id: todo.id
         },
@@ -277,6 +297,7 @@ describe("http/controllers/todos", () => {
       };
 
       const event = {
+        httpMethod: "DELETE",
         pathParameters: {
           id: todo.id
         }
@@ -293,6 +314,11 @@ describe("http/controllers/todos", () => {
         assert.equal(err, null);
 
         assert.equal(response.statusCode, 200);
+        assert.equal(
+          response.headers["Access-Control-Allow-Headers"],
+          "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,Cache-control,Pragma,X-Frame-Options"
+        );
+        assert.equal(response.headers["Access-Control-Allow-Origin"], "*");
         assert.equal(response.body, "{}");
 
         done();
