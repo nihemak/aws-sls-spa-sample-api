@@ -4,10 +4,11 @@ import { applyCommonMiddlewares } from "../utils/apply-common-middlewares";
 import { requestValidator } from "../middlewares/request-validator";
 import { container, TYPES } from "../../providers/inversify.config";
 import { Todos } from "../../models/Todos";
+import Todo from "../../entities/todo";
 
 export const create: middy.IMiddy = applyCommonMiddlewares(
   middy(async (event: APIGatewayEvent, _: Context, cb: Callback) => {
-    const todo = await container
+    const todo: Todo = await container
       .get<Todos>(TYPES.Todos)
       .create((event.body as any).text);
     cb(null, {
@@ -23,7 +24,7 @@ export const create: middy.IMiddy = applyCommonMiddlewares(
 
 export const list: middy.IMiddy = applyCommonMiddlewares(
   middy(async (_event: APIGatewayEvent, _: Context, cb: Callback) => {
-    const todos = await container.get<Todos>(TYPES.Todos).all();
+    const todos: Todo[] = await container.get<Todos>(TYPES.Todos).all();
     cb(null, {
       statusCode: 200,
       body: JSON.stringify(todos)
@@ -33,7 +34,7 @@ export const list: middy.IMiddy = applyCommonMiddlewares(
 
 export const get: middy.IMiddy = applyCommonMiddlewares(
   middy(async (event: APIGatewayEvent, _: Context, cb: Callback) => {
-    const todo = await container
+    const todo: Todo | {} = await container
       .get<Todos>(TYPES.Todos)
       .get((event.pathParameters as any).id);
     cb(null, {
@@ -49,7 +50,7 @@ export const get: middy.IMiddy = applyCommonMiddlewares(
 
 export const update: middy.IMiddy = applyCommonMiddlewares(
   middy(async (event: APIGatewayEvent, _: Context, cb: Callback) => {
-    const todo = await container
+    const todo: Todo = await container
       .get<Todos>(TYPES.Todos)
       .update(
         (event.pathParameters as any).id,

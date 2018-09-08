@@ -1,6 +1,7 @@
 import { injectable } from "inversify";
 import "reflect-metadata";
 import { Todos as ITodos } from "../Todos";
+import Todo from "../../entities/todo";
 import * as AWS from "aws-sdk";
 import * as dynamo from "dynamodb";
 import * as Joi from "joi";
@@ -38,7 +39,7 @@ export class Todos implements ITodos {
     });
   }
 
-  public create(text: string): Promise<any> {
+  public create(text: string): Promise<Todo> {
     return new Promise((resolve, reject) => {
       this.schema.create(
         {
@@ -56,7 +57,7 @@ export class Todos implements ITodos {
     });
   }
 
-  public all(): Promise<any> {
+  public all(): Promise<Todo[]> {
     return new Promise((resolve, reject) => {
       this.schema
         .scan()
@@ -73,7 +74,7 @@ export class Todos implements ITodos {
     });
   }
 
-  public get(id: string): Promise<any> {
+  public get(id: string): Promise<Todo | {}> {
     return new Promise((resolve, reject) => {
       this.schema.get(id, (err: any, result: any) => {
         if (err) {
@@ -87,7 +88,7 @@ export class Todos implements ITodos {
     });
   }
 
-  public update(id: string, text: string, checked: boolean): Promise<any> {
+  public update(id: string, text: string, checked: boolean): Promise<Todo> {
     return new Promise((resolve, reject) => {
       const timestamp = new Date().getTime();
       this.schema.update(
@@ -107,7 +108,7 @@ export class Todos implements ITodos {
     });
   }
 
-  public delete(id: string): Promise<any> {
+  public delete(id: string): Promise<void> {
     return new Promise((resolve, reject) => {
       this.schema.destroy(id, (err: any) => {
         if (err) {

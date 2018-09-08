@@ -11,27 +11,28 @@ import {
 import { container, TYPES } from "../../../providers/inversify.config";
 import { injectable } from "inversify";
 import { Todos as ITodos } from "../../../models/Todos";
+import Todo from "../../../entities/todo";
 
 @injectable()
 class TodosMock implements ITodos {
-  public static create = (_text: string): Promise<any> => {
-    return Promise.resolve({});
+  public static create = (_text: string): Promise<Todo> => {
+    return Promise.reject();
   };
-  public create(text: string): Promise<any> {
+  public create(text: string): Promise<Todo> {
     return TodosMock.create(text);
   }
 
-  public static all = (): Promise<any> => {
-    return Promise.resolve([]);
+  public static all = (): Promise<Todo[]> => {
+    return Promise.reject();
   };
-  public all(): Promise<any> {
+  public all(): Promise<Todo[]> {
     return TodosMock.all();
   }
 
-  public static get = (_id: string): Promise<any> => {
-    return Promise.resolve({});
+  public static get = (_id: string): Promise<Todo | {}> => {
+    return Promise.reject();
   };
-  public get(id: string): Promise<any> {
+  public get(id: string): Promise<Todo | {}> {
     return TodosMock.get(id);
   }
 
@@ -39,17 +40,17 @@ class TodosMock implements ITodos {
     _id: string,
     _text: string,
     _checked: boolean
-  ): Promise<any> => {
-    return Promise.resolve({});
+  ): Promise<Todo> => {
+    return Promise.reject();
   };
-  public update(id: string, text: string, checked: boolean): Promise<any> {
+  public update(id: string, text: string, checked: boolean): Promise<Todo> {
     return TodosMock.update(id, text, checked);
   }
 
-  public static delete = (_id: string): Promise<any> => {
-    return Promise.resolve({});
+  public static delete = (_id: string): Promise<void> => {
+    return Promise.reject();
   };
-  public delete(id: string): Promise<any> {
+  public delete(id: string): Promise<void> {
     return TodosMock.delete(id);
   }
 
@@ -84,7 +85,7 @@ describe("http/controllers/todos", () => {
 
   describe("#create", () => {
     it("should success response when success handler.", done => {
-      const todo = {
+      const todo: Todo = {
         id: "b24bd9b3-9517-4c43-9d7e-858969ea9483",
         text: "foo",
         checked: false,
@@ -100,7 +101,7 @@ describe("http/controllers/todos", () => {
         body: JSON.stringify({ text: todo.text })
       };
 
-      TodosMock.create = (text: string): Promise<any> => {
+      TodosMock.create = (text: string): Promise<Todo> => {
         expect(text).to.equal(todo.text);
 
         return Promise.resolve(todo);
@@ -129,7 +130,7 @@ describe("http/controllers/todos", () => {
 
   describe("#list", () => {
     it("should success response when success handler.", done => {
-      const todos: any = [];
+      const todos: Todo[] = [];
       todos.push({
         text: "foo",
         id: "FD46591-5827-4678-BC5E-15C02B48BD4B",
@@ -149,7 +150,7 @@ describe("http/controllers/todos", () => {
         httpMethod: "GET"
       };
 
-      TodosMock.all = (): Promise<any> => {
+      TodosMock.all = (): Promise<Todo[]> => {
         return Promise.resolve(todos);
       };
       container.rebind<ITodos>(TYPES.Todos).to(TodosMock);
@@ -176,7 +177,7 @@ describe("http/controllers/todos", () => {
 
   describe("#get", () => {
     it("should success response when success handler.", done => {
-      const todo = {
+      const todo: Todo = {
         text: "foo",
         id: "FD46591-5827-4678-BC5E-15C02B48BD4B",
         checked: true,
@@ -191,7 +192,7 @@ describe("http/controllers/todos", () => {
         }
       };
 
-      TodosMock.get = (id: string): Promise<any> => {
+      TodosMock.get = (id: string): Promise<Todo | {}> => {
         expect(id).to.equal(todo.id);
 
         return Promise.resolve(todo);
@@ -220,7 +221,7 @@ describe("http/controllers/todos", () => {
 
   describe("#update", () => {
     it("should success response when success handler.", done => {
-      const todo = {
+      const todo: Todo = {
         text: "foo",
         id: "FD46591-5827-4678-BC5E-15C02B48BD4B",
         checked: true,
@@ -246,7 +247,7 @@ describe("http/controllers/todos", () => {
         id: string,
         text: string,
         checked: boolean
-      ): Promise<any> => {
+      ): Promise<Todo> => {
         expect(id).to.equal(todo.id);
         expect(text).to.equal(todo.text);
         expect(checked).to.equal(todo.checked);
@@ -281,10 +282,10 @@ describe("http/controllers/todos", () => {
         }
       };
 
-      TodosMock.delete = (id: string): Promise<any> => {
+      TodosMock.delete = (id: string): Promise<void> => {
         expect(id).to.equal(todo.id);
 
-        return Promise.resolve({});
+        return Promise.resolve();
       };
       container.rebind<ITodos>(TYPES.Todos).to(TodosMock);
 
