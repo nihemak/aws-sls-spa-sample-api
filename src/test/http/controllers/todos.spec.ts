@@ -1,5 +1,5 @@
 import { describe, it } from "mocha";
-import { assert } from "chai";
+import { expect } from "chai";
 import { Context } from "aws-lambda";
 import {
   create,
@@ -101,28 +101,26 @@ describe("http/controllers/todos", () => {
       };
 
       TodosMock.create = (text: string): Promise<any> => {
-        assert.equal(text, todo.text);
+        expect(text).to.equal(todo.text);
 
         return Promise.resolve(todo);
       };
       container.rebind<ITodos>(TYPES.Todos).to(TodosMock);
 
       create(event, dummyContext, (err, response) => {
-        assert.equal(err, null);
+        expect(err).to.equal(null);
 
-        assert.equal(response.statusCode, 200);
-        assert.equal(
-          response.headers["Access-Control-Allow-Headers"],
-          "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,Cache-control,Pragma,X-Frame-Options"
-        );
-        assert.equal(response.headers["Access-Control-Allow-Origin"], "*");
+        expect(response).to.deep.include({
+          statusCode: 200,
+          headers: {
+            "Access-Control-Allow-Headers":
+              "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,Cache-control,Pragma,X-Frame-Options",
+            "Access-Control-Allow-Origin": "*"
+          }
+        });
 
         const body = JSON.parse(response.body);
-        assert.equal(body.text, todo.text);
-        assert.equal(body.id, todo.id);
-        assert.equal(body.checked, todo.checked);
-        assert.equal(body.createdAt, todo.createdAt);
-        assert.equal(body.updatedAt, todo.updatedAt);
+        expect(body).to.deep.equal(todo);
 
         done();
       });
@@ -132,24 +130,20 @@ describe("http/controllers/todos", () => {
   describe("#list", () => {
     it("should success response when success handler.", done => {
       const todos: any = [];
-
-      const todo1 = {
+      todos.push({
         text: "foo",
         id: "FD46591-5827-4678-BC5E-15C02B48BD4B",
         checked: true,
         createdAt: 1536101188360,
         updatedAt: 1536101199360
-      };
-      todos.push(todo1);
-
-      const todo2 = {
+      });
+      todos.push({
         text: "bar",
         id: "88D85019-AC42-408A-95FC-910E13CE79D8",
         checked: false,
         createdAt: 1536101177360,
         updatedAt: 1536199199360
-      };
-      todos.push(todo2);
+      });
 
       const event = {
         httpMethod: "GET"
@@ -161,29 +155,19 @@ describe("http/controllers/todos", () => {
       container.rebind<ITodos>(TYPES.Todos).to(TodosMock);
 
       list(event, dummyContext, (err, response) => {
-        assert.equal(err, null);
+        expect(err).to.equal(null);
 
-        assert.equal(response.statusCode, 200);
-        assert.equal(
-          response.headers["Access-Control-Allow-Headers"],
-          "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,Cache-control,Pragma,X-Frame-Options"
-        );
-        assert.equal(response.headers["Access-Control-Allow-Origin"], "*");
+        expect(response).to.deep.include({
+          statusCode: 200,
+          headers: {
+            "Access-Control-Allow-Headers":
+              "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,Cache-control,Pragma,X-Frame-Options",
+            "Access-Control-Allow-Origin": "*"
+          }
+        });
 
         const body = JSON.parse(response.body);
-        assert.equal(body.length, 2);
-
-        assert.equal(body[0].text, todo1.text);
-        assert.equal(body[0].id, todo1.id);
-        assert.equal(body[0].checked, todo1.checked);
-        assert.equal(body[0].createdAt, todo1.createdAt);
-        assert.equal(body[0].updatedAt, todo1.updatedAt);
-
-        assert.equal(body[1].text, todo2.text);
-        assert.equal(body[1].id, todo2.id);
-        assert.equal(body[1].checked, todo2.checked);
-        assert.equal(body[1].createdAt, todo2.createdAt);
-        assert.equal(body[1].updatedAt, todo2.updatedAt);
+        expect(body).to.deep.equal(todos);
 
         done();
       });
@@ -208,28 +192,26 @@ describe("http/controllers/todos", () => {
       };
 
       TodosMock.get = (id: string): Promise<any> => {
-        assert.equal(id, todo.id);
+        expect(id).to.equal(todo.id);
 
         return Promise.resolve(todo);
       };
       container.rebind<ITodos>(TYPES.Todos).to(TodosMock);
 
       get(event, dummyContext, (err, response) => {
-        assert.equal(err, null);
+        expect(err).to.equal(null);
 
-        assert.equal(response.statusCode, 200);
-        assert.equal(
-          response.headers["Access-Control-Allow-Headers"],
-          "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,Cache-control,Pragma,X-Frame-Options"
-        );
-        assert.equal(response.headers["Access-Control-Allow-Origin"], "*");
+        expect(response).to.deep.include({
+          statusCode: 200,
+          headers: {
+            "Access-Control-Allow-Headers":
+              "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,Cache-control,Pragma,X-Frame-Options",
+            "Access-Control-Allow-Origin": "*"
+          }
+        });
 
         const body = JSON.parse(response.body);
-        assert.equal(body.text, todo.text);
-        assert.equal(body.id, todo.id);
-        assert.equal(body.checked, todo.checked);
-        assert.equal(body.createdAt, todo.createdAt);
-        assert.equal(body.updatedAt, todo.updatedAt);
+        expect(body).to.deep.equal(todo);
 
         done();
       });
@@ -265,25 +247,21 @@ describe("http/controllers/todos", () => {
         text: string,
         checked: boolean
       ): Promise<any> => {
-        assert.equal(id, todo.id);
-        assert.equal(text, todo.text);
-        assert.equal(checked, todo.checked);
+        expect(id).to.equal(todo.id);
+        expect(text).to.equal(todo.text);
+        expect(checked).to.equal(todo.checked);
 
         return Promise.resolve(todo);
       };
       container.rebind<ITodos>(TYPES.Todos).to(TodosMock);
 
       update(event, dummyContext, (err, response) => {
-        assert.equal(err, null);
+        expect(err).to.equal(null);
 
-        assert.equal(response.statusCode, 200);
+        expect(response.statusCode).to.equal(200);
 
         const body = JSON.parse(response.body);
-        assert.equal(body.text, todo.text);
-        assert.equal(body.id, todo.id);
-        assert.equal(body.checked, todo.checked);
-        assert.equal(body.createdAt, todo.createdAt);
-        assert.equal(body.updatedAt, todo.updatedAt);
+        expect(body).to.deep.equal(todo);
 
         done();
       });
@@ -304,22 +282,24 @@ describe("http/controllers/todos", () => {
       };
 
       TodosMock.delete = (id: string): Promise<any> => {
-        assert.equal(id, todo.id);
+        expect(id).to.equal(todo.id);
 
         return Promise.resolve({});
       };
       container.rebind<ITodos>(TYPES.Todos).to(TodosMock);
 
       destroy(event, dummyContext, (err, response) => {
-        assert.equal(err, null);
+        expect(err).to.equal(null);
 
-        assert.equal(response.statusCode, 200);
-        assert.equal(
-          response.headers["Access-Control-Allow-Headers"],
-          "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,Cache-control,Pragma,X-Frame-Options"
-        );
-        assert.equal(response.headers["Access-Control-Allow-Origin"], "*");
-        assert.equal(response.body, "{}");
+        expect(response).to.deep.equal({
+          statusCode: 200,
+          headers: {
+            "Access-Control-Allow-Headers":
+              "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,Cache-control,Pragma,X-Frame-Options",
+            "Access-Control-Allow-Origin": "*"
+          },
+          body: "{}"
+        });
 
         done();
       });
