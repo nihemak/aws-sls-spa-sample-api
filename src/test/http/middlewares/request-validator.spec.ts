@@ -1,5 +1,5 @@
 import { describe, it } from "mocha";
-import { assert } from "chai";
+import { expect } from "chai";
 import { APIGatewayEvent, Callback, Context } from "aws-lambda";
 import middy from "@middy/core";
 import { requestValidator } from "../../../http/middlewares/request-validator";
@@ -42,14 +42,15 @@ describe("http/middlewares/requestValidator", () => {
     };
     handler.use(requestValidator(rules));
 
+    const body = { foo: "bar" };
     const event = {
-      body: { foo: "bar" }
+      body: body
     };
 
     handler(event, dummyContext, (err, response) => {
-      assert.equal(err, null);
-      assert.equal(response.statusCode, 200);
-      assert.equal(JSON.parse(response.body).foo, "bar");
+      expect(err).to.equal(null);
+      expect(response.statusCode).to.equal(200);
+      expect(JSON.parse(response.body)).to.deep.equal(body);
       done();
     });
   });
@@ -72,11 +73,12 @@ describe("http/middlewares/requestValidator", () => {
       body: { foo2: "bar" }
     };
     handler(event, dummyContext, (err, response) => {
-      assert.equal((err as any).statusCode, 400);
-      assert.equal((err as any).message, "There is an error in the parameter.");
-      assert.equal((err as any).errors.length, 1);
-      assert.equal((err as any).errors[0].field, "foo");
-      assert.equal(response, null);
+      expect(err as any).to.deep.equal({
+        statusCode: 400,
+        message: "There is an error in the parameter.",
+        errors: [{ field: "foo", message: "The foo field is required." }]
+      });
+      expect(response).to.equal(undefined);
       done();
     });
   });

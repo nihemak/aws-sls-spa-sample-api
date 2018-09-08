@@ -1,5 +1,5 @@
 import { describe, it } from "mocha";
-import { assert } from "chai";
+import { expect } from "chai";
 import { APIGatewayEvent, Callback, Context } from "aws-lambda";
 import middy from "@middy/core";
 import { errorHandler } from "../../../http/middlewares/error-handler";
@@ -39,14 +39,15 @@ describe("http/middlewares/errorHandler", () => {
     );
     handler.use(errorHandler());
 
+    const body = { foo: "bar" };
     const event = {
-      body: { foo: "bar" }
+      body: body
     };
 
     handler(event, dummyContext, (err, response) => {
-      assert.equal(err, null);
-      assert.equal(response.statusCode, 200);
-      assert.equal(JSON.parse(response.body).foo, "bar");
+      expect(err).to.equal(null);
+      expect(response.statusCode).to.equal(200);
+      expect(JSON.parse(response.body)).to.deep.equal(body);
       done();
     });
   });
@@ -64,9 +65,12 @@ describe("http/middlewares/errorHandler", () => {
     handler.use(errorHandler());
 
     handler({}, dummyContext, (err, response) => {
-      assert.equal(err, null);
-      assert.equal(response.statusCode, 300);
-      assert.equal(JSON.parse(response.body).message, "test");
+      expect(err).to.equal(null);
+      expect(response.statusCode).to.equal(300);
+      expect(JSON.parse(response.body)).to.deep.equal({
+        message: "test",
+        errors: []
+      });
       done();
     });
   });
