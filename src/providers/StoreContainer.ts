@@ -1,6 +1,6 @@
 import { Container } from "inversify";
-import { Todos } from "../models/Todos";
-import { Todos as TodosImpl } from "../models/Implementations/Todos";
+import { Todos } from "../usecases/stores/Todos";
+import { Todos as TodosImpl } from "../databases/Todos";
 
 export const TYPES = {
   Todos: Symbol.for("Todos")

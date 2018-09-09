@@ -1,7 +1,7 @@
 import { injectable } from "inversify";
 import "reflect-metadata";
-import { Todos as ITodos } from "../Todos";
-import Todo from "../../entities/todo";
+import { Todos as ITodos } from "../usecases/stores/Todos";
+import Todo from "../entities/todo";
 import * as AWS from "aws-sdk";
 import * as dynamo from "dynamodb";
 import * as Joi from "joi";

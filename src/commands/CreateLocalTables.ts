@@ -1,5 +1,5 @@
-import { container, TYPES } from "../providers/inversify.config";
-import { Todos } from "../models/Todos";
+import { container, TYPES } from "../providers/StoreContainer";
+import { Todos } from "../usecases/stores/Todos";
 
 container
   .get<Todos>(TYPES.Todos)

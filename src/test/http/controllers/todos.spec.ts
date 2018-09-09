@@ -8,9 +8,9 @@ import {
   update,
   destroy
 } from "../../../http/controllers/todos";
-import { container, TYPES } from "../../../providers/inversify.config";
+import { container, TYPES } from "../../../providers/StoreContainer";
 import { injectable } from "inversify";
-import { Todos as ITodos } from "../../../models/Todos";
+import { Todos as ITodos } from "../../../usecases/stores/Todos";
 import Todo from "../../../entities/todo";
 
 @injectable()
