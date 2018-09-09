@@ -10,30 +10,30 @@ import {
 } from "../../../http/controllers/todos";
 import { container, TYPES } from "../../../providers/container";
 import { injectable } from "inversify";
-import { Todos as ITodos } from "../../../usecases/stores/Todos";
+import { Todos as TodosUseCase } from "../../../usecases/Todos";
 import Todo from "../../../entities/todo";
 
 @injectable()
-class TodosMock implements ITodos {
+class TodosUseCaseMock implements TodosUseCase {
   public static create = (_text: string): Promise<Todo> => {
     return Promise.reject();
   };
   public create(text: string): Promise<Todo> {
-    return TodosMock.create(text);
+    return TodosUseCaseMock.create(text);
   }
 
-  public static all = (): Promise<Todo[]> => {
+  public static list = (): Promise<Todo[]> => {
     return Promise.reject();
   };
-  public all(): Promise<Todo[]> {
-    return TodosMock.all();
+  public list(): Promise<Todo[]> {
+    return TodosUseCaseMock.list();
   }
 
-  public static get = (_id: string): Promise<Todo | {}> => {
+  public static show = (_id: string): Promise<Todo | {}> => {
     return Promise.reject();
   };
-  public get(id: string): Promise<Todo | {}> {
-    return TodosMock.get(id);
+  public show(id: string): Promise<Todo | {}> {
+    return TodosUseCaseMock.show(id);
   }
 
   public static update = (
@@ -44,14 +44,14 @@ class TodosMock implements ITodos {
     return Promise.reject();
   };
   public update(id: string, text: string, checked: boolean): Promise<Todo> {
-    return TodosMock.update(id, text, checked);
+    return TodosUseCaseMock.update(id, text, checked);
   }
 
   public static delete = (_id: string): Promise<void> => {
     return Promise.reject();
   };
   public delete(id: string): Promise<void> {
-    return TodosMock.delete(id);
+    return TodosUseCaseMock.delete(id);
   }
 
   public createTable(_rc: number, _wc: number): Promise<void> {
@@ -101,12 +101,12 @@ describe("http/controllers/todos", () => {
         body: JSON.stringify({ text: todo.text })
       };
 
-      TodosMock.create = (text: string): Promise<Todo> => {
+      TodosUseCaseMock.create = (text: string): Promise<Todo> => {
         expect(text).to.equal(todo.text);
 
         return Promise.resolve(todo);
       };
-      container.rebind<ITodos>(TYPES.STORE_TODOS).to(TodosMock);
+      container.rebind<TodosUseCase>(TYPES.USECASE_TODOS).to(TodosUseCaseMock);
 
       create(event, dummyContext, (err, response) => {
         expect(err).to.equal(null);
@@ -150,10 +150,10 @@ describe("http/controllers/todos", () => {
         httpMethod: "GET"
       };
 
-      TodosMock.all = (): Promise<Todo[]> => {
+      TodosUseCaseMock.list = (): Promise<Todo[]> => {
         return Promise.resolve(todos);
       };
-      container.rebind<ITodos>(TYPES.STORE_TODOS).to(TodosMock);
+      container.rebind<TodosUseCase>(TYPES.USECASE_TODOS).to(TodosUseCaseMock);
 
       list(event, dummyContext, (err, response) => {
         expect(err).to.equal(null);
@@ -192,12 +192,12 @@ describe("http/controllers/todos", () => {
         }
       };
 
-      TodosMock.get = (id: string): Promise<Todo | {}> => {
+      TodosUseCaseMock.show = (id: string): Promise<Todo | {}> => {
         expect(id).to.equal(todo.id);
 
         return Promise.resolve(todo);
       };
-      container.rebind<ITodos>(TYPES.STORE_TODOS).to(TodosMock);
+      container.rebind<TodosUseCase>(TYPES.USECASE_TODOS).to(TodosUseCaseMock);
 
       get(event, dummyContext, (err, response) => {
         expect(err).to.equal(null);
@@ -243,7 +243,7 @@ describe("http/controllers/todos", () => {
         })
       };
 
-      TodosMock.update = (
+      TodosUseCaseMock.update = (
         id: string,
         text: string,
         checked: boolean
@@ -254,7 +254,7 @@ describe("http/controllers/todos", () => {
 
         return Promise.resolve(todo);
       };
-      container.rebind<ITodos>(TYPES.STORE_TODOS).to(TodosMock);
+      container.rebind<TodosUseCase>(TYPES.USECASE_TODOS).to(TodosUseCaseMock);
 
       update(event, dummyContext, (err, response) => {
         expect(err).to.equal(null);
@@ -282,12 +282,12 @@ describe("http/controllers/todos", () => {
         }
       };
 
-      TodosMock.delete = (id: string): Promise<void> => {
+      TodosUseCaseMock.delete = (id: string): Promise<void> => {
         expect(id).to.equal(todo.id);
 
         return Promise.resolve();
       };
-      container.rebind<ITodos>(TYPES.STORE_TODOS).to(TodosMock);
+      container.rebind<TodosUseCase>(TYPES.USECASE_TODOS).to(TodosUseCaseMock);
 
       destroy(event, dummyContext, (err, response) => {
         expect(err).to.equal(null);
