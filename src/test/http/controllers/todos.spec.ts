@@ -8,7 +8,7 @@ import {
   update,
   destroy
 } from "../../../http/controllers/todos";
-import { container, TYPES } from "../../../providers/StoreContainer";
+import { container, TYPES } from "../../../providers/container";
 import { injectable } from "inversify";
 import { Todos as ITodos } from "../../../usecases/stores/Todos";
 import Todo from "../../../entities/todo";
@@ -106,7 +106,7 @@ describe("http/controllers/todos", () => {
 
         return Promise.resolve(todo);
       };
-      container.rebind<ITodos>(TYPES.Todos).to(TodosMock);
+      container.rebind<ITodos>(TYPES.STORE_TODOS).to(TodosMock);
 
       create(event, dummyContext, (err, response) => {
         expect(err).to.equal(null);
@@ -153,7 +153,7 @@ describe("http/controllers/todos", () => {
       TodosMock.all = (): Promise<Todo[]> => {
         return Promise.resolve(todos);
       };
-      container.rebind<ITodos>(TYPES.Todos).to(TodosMock);
+      container.rebind<ITodos>(TYPES.STORE_TODOS).to(TodosMock);
 
       list(event, dummyContext, (err, response) => {
         expect(err).to.equal(null);
@@ -197,7 +197,7 @@ describe("http/controllers/todos", () => {
 
         return Promise.resolve(todo);
       };
-      container.rebind<ITodos>(TYPES.Todos).to(TodosMock);
+      container.rebind<ITodos>(TYPES.STORE_TODOS).to(TodosMock);
 
       get(event, dummyContext, (err, response) => {
         expect(err).to.equal(null);
@@ -254,7 +254,7 @@ describe("http/controllers/todos", () => {
 
         return Promise.resolve(todo);
       };
-      container.rebind<ITodos>(TYPES.Todos).to(TodosMock);
+      container.rebind<ITodos>(TYPES.STORE_TODOS).to(TodosMock);
 
       update(event, dummyContext, (err, response) => {
         expect(err).to.equal(null);
@@ -287,7 +287,7 @@ describe("http/controllers/todos", () => {
 
         return Promise.resolve();
       };
-      container.rebind<ITodos>(TYPES.Todos).to(TodosMock);
+      container.rebind<ITodos>(TYPES.STORE_TODOS).to(TodosMock);
 
       destroy(event, dummyContext, (err, response) => {
         expect(err).to.equal(null);

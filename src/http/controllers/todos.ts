@@ -2,14 +2,14 @@ import { APIGatewayEvent, Callback, Context } from "aws-lambda";
 import middy from "@middy/core";
 import { applyCommonMiddlewares } from "../utils/apply-common-middlewares";
 import { requestValidator } from "../middlewares/request-validator";
-import { container, TYPES } from "../../providers/UseCaseContainer";
+import { container, TYPES } from "../../providers/container";
 import Todo from "../../entities/todo";
 import { Todos as UseCase } from "../../usecases/Todos";
 
 export const create: middy.IMiddy = applyCommonMiddlewares(
   middy(async (event: APIGatewayEvent, _: Context, cb: Callback) => {
     const todo: Todo = await container
-      .get<UseCase>(TYPES.Todos)
+      .get<UseCase>(TYPES.USECASE_TODOS)
       .create((event.body as any).text);
     cb(null, {
       statusCode: 200,
@@ -24,7 +24,9 @@ export const create: middy.IMiddy = applyCommonMiddlewares(
 
 export const list: middy.IMiddy = applyCommonMiddlewares(
   middy(async (_event: APIGatewayEvent, _: Context, cb: Callback) => {
-    const todos: Todo[] = await container.get<UseCase>(TYPES.Todos).list();
+    const todos: Todo[] = await container
+      .get<UseCase>(TYPES.USECASE_TODOS)
+      .list();
     cb(null, {
       statusCode: 200,
       body: JSON.stringify(todos)
@@ -35,7 +37,7 @@ export const list: middy.IMiddy = applyCommonMiddlewares(
 export const get: middy.IMiddy = applyCommonMiddlewares(
   middy(async (event: APIGatewayEvent, _: Context, cb: Callback) => {
     const todo: Todo | {} = await container
-      .get<UseCase>(TYPES.Todos)
+      .get<UseCase>(TYPES.USECASE_TODOS)
       .show((event.pathParameters as any).id);
     cb(null, {
       statusCode: 200,
@@ -51,7 +53,7 @@ export const get: middy.IMiddy = applyCommonMiddlewares(
 export const update: middy.IMiddy = applyCommonMiddlewares(
   middy(async (event: APIGatewayEvent, _: Context, cb: Callback) => {
     const todo: Todo = await container
-      .get<UseCase>(TYPES.Todos)
+      .get<UseCase>(TYPES.USECASE_TODOS)
       .update(
         (event.pathParameters as any).id,
         (event.body as any).text,
@@ -73,7 +75,7 @@ export const update: middy.IMiddy = applyCommonMiddlewares(
 export const destroy: middy.IMiddy = applyCommonMiddlewares(
   middy(async (event: APIGatewayEvent, _: Context, cb: Callback) => {
     await container
-      .get<UseCase>(TYPES.Todos)
+      .get<UseCase>(TYPES.USECASE_TODOS)
       .delete((event.pathParameters as any).id);
     cb(null, {
       statusCode: 200,
