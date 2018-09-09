@@ -20,6 +20,8 @@
     "test-all": "npm-run-all lint webpack test"
   },
   "dependencies": {
+    "@aws/dynamodb-data-mapper": "^0.7.3",
+    "@aws/dynamodb-data-mapper-annotations": "^0.7.3",
     "@middy/core": "^1.0.0-alpha.16",
     "@middy/http-cors": "^1.0.0-alpha.16",
     "@middy/http-event-normalizer": "^1.0.0-alpha.16",
