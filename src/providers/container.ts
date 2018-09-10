@@ -2,7 +2,7 @@ import { Container } from "inversify";
 import { Todos as UseCaseTodos } from "../usecases/Todos";
 import { Todos as UseCaseTodosImpl } from "../usecases/implementations/Todos";
 import { Todos as StoreTodos } from "../usecases/stores/Todos";
-import { Todos as StoreTodosImpl } from "../databases/Todos";
+import { Todos as StoreTodosImpl } from "../adapters/databases/Todos";
 
 export const TYPES = {
   USECASE_TODOS: Symbol.for("USECASE_TODOS"),
