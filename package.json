@@ -26,9 +26,8 @@
     "@middy/http-cors": "^1.0.0-alpha.16",
     "@middy/http-event-normalizer": "^1.0.0-alpha.16",
     "@middy/http-json-body-parser": "^1.0.0-alpha.16",
-    "dynamodb": "^1.1.2",
+    "aws-sdk": "^2.311.0",
     "inversify": "^4.13.0",
-    "joi": "^13.6.0",
     "reflect-metadata": "^0.1.12",
     "source-map-support": "^0.5.9",
     "validatorjs": "^3.14.2"
@@ -36,7 +35,6 @@
   "devDependencies": {
     "@types/aws-lambda": "8.10.1",
     "@types/chai": "^4.1.4",
-    "@types/joi": "^13.4.4",
     "@types/mocha": "^5.2.5",
     "@types/node": "^8.10.29",
     "@types/validatorjs": "^3.7.1",
