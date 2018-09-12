@@ -11,47 +11,77 @@ import {
 import { container, TYPES } from "../../../providers/container";
 import { injectable } from "inversify";
 import { Todos as TodosUseCase } from "../../../usecases/Todos";
+import {
+  TodoCreateInput,
+  TodoShowInput,
+  TodoUpdateInput,
+  TodoDeleteInput
+} from "../../../usecases/inputs/Todos";
+import {
+  TodoCreateOutput,
+  TodoListOutput,
+  TodoShowOutput,
+  TodoUpdateOutput,
+  TodoDeleteOutput
+} from "../../../usecases/outputs/Todos";
 import Todo from "../../../entities/todo";
 
 @injectable()
 class TodosUseCaseMock implements TodosUseCase {
-  public static create = (_text: string): Promise<Todo> => {
+  public static create = (
+    _input: TodoCreateInput,
+    _output: TodoCreateOutput
+  ): Promise<void> => {
     return Promise.reject();
   };
-  public create(text: string): Promise<Todo> {
-    return TodosUseCaseMock.create(text);
+  public create(
+    input: TodoCreateInput,
+    output: TodoCreateOutput
+  ): Promise<void> {
+    return TodosUseCaseMock.create(input, output);
   }
 
-  public static list = (): Promise<Todo[]> => {
+  public static list = (_output: TodoListOutput): Promise<void> => {
     return Promise.reject();
   };
-  public list(): Promise<Todo[]> {
-    return TodosUseCaseMock.list();
+  public list(output: TodoListOutput): Promise<void> {
+    return TodosUseCaseMock.list(output);
   }
 
-  public static show = (_id: string): Promise<Todo | {}> => {
+  public static show = (
+    _input: TodoShowInput,
+    _output: TodoShowOutput
+  ): Promise<void> => {
     return Promise.reject();
   };
-  public show(id: string): Promise<Todo | {}> {
-    return TodosUseCaseMock.show(id);
+  public show(input: TodoShowInput, output: TodoShowOutput): Promise<void> {
+    return TodosUseCaseMock.show(input, output);
   }
 
   public static update = (
-    _id: string,
-    _text: string,
-    _checked: boolean
-  ): Promise<Todo> => {
+    _input: TodoUpdateInput,
+    _output: TodoUpdateOutput
+  ): Promise<void> => {
     return Promise.reject();
   };
-  public update(id: string, text: string, checked: boolean): Promise<Todo> {
-    return TodosUseCaseMock.update(id, text, checked);
+  public update(
+    input: TodoUpdateInput,
+    output: TodoUpdateOutput
+  ): Promise<void> {
+    return TodosUseCaseMock.update(input, output);
   }
 
-  public static delete = (_id: string): Promise<void> => {
+  public static delete = (
+    _input: TodoDeleteInput,
+    _output: TodoDeleteOutput
+  ): Promise<void> => {
     return Promise.reject();
   };
-  public delete(id: string): Promise<void> {
-    return TodosUseCaseMock.delete(id);
+  public delete(
+    input: TodoDeleteInput,
+    output: TodoDeleteOutput
+  ): Promise<void> {
+    return TodosUseCaseMock.delete(input, output);
   }
 
   public createTable(_rc: number, _wc: number): Promise<void> {
@@ -101,10 +131,14 @@ describe("http/controllers/todos", () => {
         body: JSON.stringify({ text: todo.text })
       };
 
-      TodosUseCaseMock.create = (text: string): Promise<Todo> => {
-        expect(text).to.equal(todo.text);
+      TodosUseCaseMock.create = (
+        input: TodoCreateInput,
+        output: TodoCreateOutput
+      ): Promise<void> => {
+        expect(input.getText()).to.equal(todo.text);
+        output.success(todo);
 
-        return Promise.resolve(todo);
+        return Promise.resolve();
       };
       container.rebind<TodosUseCase>(TYPES.USECASE_TODOS).to(TodosUseCaseMock);
 
@@ -150,8 +184,9 @@ describe("http/controllers/todos", () => {
         httpMethod: "GET"
       };
 
-      TodosUseCaseMock.list = (): Promise<Todo[]> => {
-        return Promise.resolve(todos);
+      TodosUseCaseMock.list = (output: TodoListOutput): Promise<void> => {
+        output.success(todos);
+        return Promise.resolve();
       };
       container.rebind<TodosUseCase>(TYPES.USECASE_TODOS).to(TodosUseCaseMock);
 
@@ -192,10 +227,14 @@ describe("http/controllers/todos", () => {
         }
       };
 
-      TodosUseCaseMock.show = (id: string): Promise<Todo | {}> => {
-        expect(id).to.equal(todo.id);
+      TodosUseCaseMock.show = (
+        input: TodoShowInput,
+        output: TodoShowOutput
+      ): Promise<void> => {
+        expect(input.getId()).to.equal(todo.id);
+        output.success(todo);
 
-        return Promise.resolve(todo);
+        return Promise.resolve();
       };
       container.rebind<TodosUseCase>(TYPES.USECASE_TODOS).to(TodosUseCaseMock);
 
@@ -244,15 +283,15 @@ describe("http/controllers/todos", () => {
       };
 
       TodosUseCaseMock.update = (
-        id: string,
-        text: string,
-        checked: boolean
-      ): Promise<Todo> => {
-        expect(id).to.equal(todo.id);
-        expect(text).to.equal(todo.text);
-        expect(checked).to.equal(todo.checked);
+        input: TodoUpdateInput,
+        output: TodoUpdateOutput
+      ): Promise<void> => {
+        expect(input.getId()).to.equal(todo.id);
+        expect(input.getText()).to.equal(todo.text);
+        expect(input.getChecked()).to.equal(todo.checked);
+        output.success(todo);
 
-        return Promise.resolve(todo);
+        return Promise.resolve();
       };
       container.rebind<TodosUseCase>(TYPES.USECASE_TODOS).to(TodosUseCaseMock);
 
@@ -282,8 +321,12 @@ describe("http/controllers/todos", () => {
         }
       };
 
-      TodosUseCaseMock.delete = (id: string): Promise<void> => {
-        expect(id).to.equal(todo.id);
+      TodosUseCaseMock.delete = (
+        input: TodoDeleteInput,
+        output: TodoDeleteOutput
+      ): Promise<void> => {
+        expect(input.getId()).to.equal(todo.id);
+        output.success();
 
         return Promise.resolve();
       };

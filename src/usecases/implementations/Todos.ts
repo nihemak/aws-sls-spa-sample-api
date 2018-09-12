@@ -4,6 +4,19 @@ import "reflect-metadata";
 import Todo from "../../entities/todo";
 import { Todos as TodoStore } from "../stores/Todos";
 import { Todos as ITodos } from "../Todos";
+import {
+  TodoCreateInput,
+  TodoShowInput,
+  TodoUpdateInput,
+  TodoDeleteInput
+} from "../../usecases/inputs/Todos";
+import {
+  TodoCreateOutput,
+  TodoListOutput,
+  TodoShowOutput,
+  TodoUpdateOutput,
+  TodoDeleteOutput
+} from "../../usecases/outputs/Todos";
 
 @injectable()
 export class Todos implements ITodos {
@@ -13,31 +26,44 @@ export class Todos implements ITodos {
     this.store = container.get<TodoStore>(TYPES.STORE_TODOS);
   }
 
-  public async create(text: string): Promise<Todo> {
-    const todo: Todo = await this.store.create(text);
-    return todo;
+  public async create(
+    input: TodoCreateInput,
+    output: TodoCreateOutput
+  ): Promise<void> {
+    const todo: Todo = await this.store.create(input.getText());
+    output.success(todo);
   }
 
-  public async list(): Promise<Todo[]> {
+  public async list(output: TodoListOutput): Promise<void> {
     const todos: Todo[] = await this.store.all();
-    return todos;
+    output.success(todos);
   }
 
-  public async show(id: string): Promise<Todo | {}> {
-    const todo: Todo | {} = await this.store.get(id);
-    return todo;
+  public async show(
+    input: TodoShowInput,
+    output: TodoShowOutput
+  ): Promise<void> {
+    const todo: Todo | {} = await this.store.get(input.getId());
+    output.success(todo);
   }
 
   public async update(
-    id: string,
-    text: string,
-    checked: boolean
-  ): Promise<Todo> {
-    const todo: Todo = await this.store.update(id, text, checked);
-    return todo;
+    input: TodoUpdateInput,
+    output: TodoUpdateOutput
+  ): Promise<void> {
+    const todo: Todo = await this.store.update(
+      input.getId(),
+      input.getText(),
+      input.getChecked()
+    );
+    output.success(todo);
   }
 
-  public async delete(id: string): Promise<void> {
-    await this.store.delete(id);
+  public async delete(
+    input: TodoDeleteInput,
+    output: TodoDeleteOutput
+  ): Promise<void> {
+    await this.store.delete(input.getId());
+    output.success();
   }
 }

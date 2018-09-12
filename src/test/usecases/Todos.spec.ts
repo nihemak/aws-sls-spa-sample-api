@@ -5,6 +5,19 @@ import { injectable } from "inversify";
 import { Todos as TodoStore } from "../../usecases/stores/Todos";
 import Todo from "../../entities/todo";
 import { Todos as UseCase } from "../../usecases/Todos";
+import {
+  TodoCreateInput,
+  TodoShowInput,
+  TodoUpdateInput,
+  TodoDeleteInput
+} from "../../usecases/inputs/Todos";
+import {
+  TodoCreateOutput,
+  TodoListOutput,
+  TodoShowOutput,
+  TodoUpdateOutput,
+  TodoDeleteOutput
+} from "../../usecases/outputs/Todos";
 
 @injectable()
 class TodoStoreMock implements TodoStore {
@@ -70,11 +83,17 @@ describe("usecases/Todos/implementations", () => {
       };
       container.rebind<TodoStore>(TYPES.STORE_TODOS).to(TodoStoreMock);
 
-      const todo: Todo = await container
-        .get<UseCase>(TYPES.USECASE_TODOS)
-        .create(storeTodo.text);
-
-      expect(todo).to.equal(storeTodo);
+      const input = new class implements TodoCreateInput {
+        public getText(): string {
+          return storeTodo.text;
+        }
+      }();
+      const output = new class implements TodoCreateOutput {
+        public success(todo: Todo): void {
+          expect(todo).to.equal(storeTodo);
+        }
+      }();
+      await container.get<UseCase>(TYPES.USECASE_TODOS).create(input, output);
     });
   });
 
@@ -101,11 +120,12 @@ describe("usecases/Todos/implementations", () => {
       };
       container.rebind<TodoStore>(TYPES.STORE_TODOS).to(TodoStoreMock);
 
-      const todos: Todo[] = await container
-        .get<UseCase>(TYPES.USECASE_TODOS)
-        .list();
-
-      expect(todos).to.equal(storeTodos);
+      const output = new class implements TodoListOutput {
+        public success(todos: Todo[]): void {
+          expect(todos).to.equal(storeTodos);
+        }
+      }();
+      await container.get<UseCase>(TYPES.USECASE_TODOS).list(output);
     });
   });
 
@@ -126,11 +146,17 @@ describe("usecases/Todos/implementations", () => {
       };
       container.rebind<TodoStore>(TYPES.STORE_TODOS).to(TodoStoreMock);
 
-      const todo: Todo | {} = await container
-        .get<UseCase>(TYPES.USECASE_TODOS)
-        .show(storeTodo.id);
-
-      expect(todo).to.equal(storeTodo);
+      const input = new class implements TodoShowInput {
+        public getId(): string {
+          return storeTodo.id;
+        }
+      }();
+      const output = new class implements TodoShowOutput {
+        public success(todo: Todo | {}): void {
+          expect(todo).to.equal(storeTodo);
+        }
+      }();
+      await container.get<UseCase>(TYPES.USECASE_TODOS).show(input, output);
     });
   });
 
@@ -157,11 +183,23 @@ describe("usecases/Todos/implementations", () => {
       };
       container.rebind<TodoStore>(TYPES.STORE_TODOS).to(TodoStoreMock);
 
-      const todo: Todo = await container
-        .get<UseCase>(TYPES.USECASE_TODOS)
-        .update(storeTodo.id, storeTodo.text, storeTodo.checked);
-
-      expect(todo).to.equal(storeTodo);
+      const input = new class implements TodoUpdateInput {
+        public getId(): string {
+          return storeTodo.id;
+        }
+        public getText(): string {
+          return storeTodo.text;
+        }
+        public getChecked(): boolean {
+          return storeTodo.checked;
+        }
+      }();
+      const output = new class implements TodoUpdateOutput {
+        public success(todo: Todo): void {
+          expect(todo).to.equal(storeTodo);
+        }
+      }();
+      await container.get<UseCase>(TYPES.USECASE_TODOS).update(input, output);
     });
   });
 
@@ -178,7 +216,17 @@ describe("usecases/Todos/implementations", () => {
       };
       container.rebind<TodoStore>(TYPES.STORE_TODOS).to(TodoStoreMock);
 
-      await container.get<UseCase>(TYPES.USECASE_TODOS).delete(storeTodo.id);
+      const input = new class implements TodoDeleteInput {
+        public getId(): string {
+          return storeTodo.id;
+        }
+      }();
+      const output = new class implements TodoDeleteOutput {
+        public success(): void {
+          expect(true).to.equal(true);
+        }
+      }();
+      await container.get<UseCase>(TYPES.USECASE_TODOS).delete(input, output);
     });
   });
 });
