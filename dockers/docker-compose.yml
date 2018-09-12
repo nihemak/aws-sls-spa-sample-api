@@ -15,6 +15,7 @@ services:
       DYNAMO_ENDPOINT: 'http://dynamodb:8000'
       DYNAMO_PREFIX: 'local'
       CORS: '*'
+      TZ: 'Asia/Tokyo'
     volumes:
       - ../:/app/
     depends_on:

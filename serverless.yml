@@ -14,6 +14,7 @@ provider:
   environment:
     DYNAMO_PREFIX : ${env:DYNAMO_PREFIX}
     CORS: ${env:CORS}
+    TZ: ${env:TZ}
   role: ${env:LAMBDA_ROLE}
   deploymentBucket:
     name: ${env:DEPLOY_BUCKET}
