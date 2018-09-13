@@ -3,7 +3,7 @@ import { expect } from "chai";
 import { APIGatewayEvent, Callback, Context } from "aws-lambda";
 import { HttpContextDummy } from "../../../utils/HttpContextDummy";
 import middy from "@middy/core";
-import { requestValidator } from "../../../../http/middlewares/request-validator";
+import { requestValidator } from "../../../../src/http/middlewares/request-validator";
 
 describe("http/middlewares/requestValidator", () => {
   it("should success when rules match.", done => {

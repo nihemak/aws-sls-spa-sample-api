@@ -7,24 +7,24 @@ import {
   get,
   update,
   destroy
-} from "../../../../http/controllers/todos";
-import { container, TYPES } from "../../../../providers/container";
-import { Todos as TodosUseCase } from "../../../../usecases/Todos";
+} from "../../../../src/http/controllers/todos";
+import { container, TYPES } from "../../../../src/providers/container";
+import { Todos as TodosUseCase } from "../../../../src/usecases/Todos";
 import {
   TodoCreateInput,
   TodoShowInput,
   TodoUpdateInput,
   TodoDeleteInput
-} from "../../../../usecases/inputs/Todos";
+} from "../../../../src/usecases/inputs/Todos";
 import {
   TodoCreateOutput,
   TodoListOutput,
   TodoShowOutput,
   TodoUpdateOutput,
   TodoDeleteOutput
-} from "../../../../usecases/outputs/Todos";
+} from "../../../../src/usecases/outputs/Todos";
 import { UseCaseTodosMock } from "../../../utils/UseCaseTodosMock";
-import { Todo } from "../../../../entities/Todo";
+import { Todo } from "../../../../src/entities/Todo";
 
 describe("http/controllers/todos", () => {
   describe("#create", () => {
