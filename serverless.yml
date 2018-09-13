@@ -21,37 +21,37 @@ provider:
 
 functions:
   hello:
-    handler: src/http/controllers/hellos.hello
+    handler: app/http/controllers/hellos.hello
     events:
       - http:
           method: get
           path: hello
   create:
-    handler: src/http/controllers/todos.create
+    handler: app/http/controllers/todos.create
     events:
       - http:
           path: v1/todos
           method: post
   list:
-    handler: src/http/controllers/todos.list
+    handler: app/http/controllers/todos.list
     events:
       - http:
           path: v1/todos
           method: get
   get:
-    handler: src/http/controllers/todos.get
+    handler: app/http/controllers/todos.get
     events:
       - http:
           path: v1/todos/{id}
           method: get
   update:
-    handler: src/http/controllers/todos.update
+    handler: app/http/controllers/todos.update
     events:
       - http:
           path: v1/todos/{id}
           method: put
   delete:
-    handler: src/http/controllers/todos.destroy
+    handler: app/http/controllers/todos.destroy
     events:
       - http:
           path: v1/todos/{id}

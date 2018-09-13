@@ -22,7 +22,7 @@
     "emitDecoratorMetadata": true,
     "baseUrl": "./",
     "paths": {
-      "*" : ["src/@types/*"]
+      "*" : ["app/@types/*"]
     }
   },
   "exclude": [

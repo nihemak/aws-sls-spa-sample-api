@@ -3,7 +3,7 @@ import { expect } from "chai";
 import { APIGatewayEvent, Callback, Context } from "aws-lambda";
 import { HttpContextDummy } from "../../../utils/HttpContextDummy";
 import middy from "@middy/core";
-import { errorHandler } from "../../../../src/http/middlewares/error-handler";
+import { errorHandler } from "../../../../app/http/middlewares/error-handler";
 
 describe("http/middlewares/errorHandler", () => {
   it("should success response when success handler.", done => {

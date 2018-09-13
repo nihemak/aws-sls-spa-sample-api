@@ -2,7 +2,7 @@
   "name": "aws-sls-spa-sample-api",
   "version": "0.0.0",
   "description": "Sample of serverless api",
-  "main": "src/http/controllers/*.ts",
+  "main": "app/http/controllers/*.ts",
   "scripts": {
     "docker-compose": "docker-compose -f dockers/docker-compose.yml",
     "docker-exec-sls": "npm run docker-compose -- exec serverless",
@@ -12,7 +12,7 @@
     "docker-down": "npm run docker-compose -- down",
     "docker-test-all": "npm run docker-down && npm run docker-up-dev && npm run docker-exec-sls -- npm run test-all && npm run docker-down",
     "docker-offline": "npm run docker-exec-sls -- sls offline --host 0.0.0.0",
-    "docker-create-tables": "npm run docker-exec-sls -- ./node_modules/.bin/ts-node src/commands/CreateLocalTables.ts",
+    "docker-create-tables": "npm run docker-exec-sls -- ./node_modules/.bin/ts-node app/commands/CreateLocalTables.ts",
     "lint": "node_modules/tslint/bin/tslint -c ./tslint.json --project . **/*.ts",
     "lint-fix": "node_modules/tslint/bin/tslint -c ./tslint.json --project . --fix **/*.ts",
     "webpack": "serverless webpack",
