@@ -1,4 +1,4 @@
-import Todo from "../../entities/todo";
+import { Todo } from "../../entities/todo";
 
 export interface TodoCreateOutput {
   success(todo: Todo): void;

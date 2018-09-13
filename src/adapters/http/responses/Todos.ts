@@ -6,7 +6,18 @@ import {
   TodoUpdateOutput as ITodoUpdateOutput,
   TodoDeleteOutput as ITodoDeleteOutput
 } from "../../../usecases/outputs/Todos";
-import Todo from "../../../entities/todo";
+import { Todo as TodoEntity } from "../../../entities/todo";
+import { Todo as TodoModel } from "../../../http/models/Todo";
+
+function toModelFromEntity(todo: TodoEntity): TodoModel {
+  return {
+    id: todo.id,
+    text: todo.text,
+    checked: todo.checked,
+    createdAt: todo.createdAt,
+    updatedAt: todo.updatedAt
+  };
+}
 
 export class TodoCreateOutput implements ITodoCreateOutput {
   private cb: Callback;
@@ -15,10 +26,10 @@ export class TodoCreateOutput implements ITodoCreateOutput {
     this.cb = cb;
   }
 
-  public success(todo: Todo): void {
+  public success(todo: TodoEntity): void {
     this.cb(null, {
       statusCode: 200,
-      body: JSON.stringify(todo)
+      body: JSON.stringify(toModelFromEntity(todo))
     });
   }
 }
@@ -30,10 +41,14 @@ export class TodoListOutput implements ITodoListOutput {
     this.cb = cb;
   }
 
-  public success(todos: Todo[]): void {
+  public success(todos: TodoEntity[]): void {
     this.cb(null, {
       statusCode: 200,
-      body: JSON.stringify(todos)
+      body: JSON.stringify(
+        todos.map(todo => {
+          return toModelFromEntity(todo);
+        })
+      )
     });
   }
 }
@@ -45,10 +60,14 @@ export class TodoShowOutput implements ITodoShowOutput {
     this.cb = cb;
   }
 
-  public success(todo: Todo | {}): void {
+  public success(todo: TodoEntity | {}): void {
+    let model = {};
+    if (todo) {
+      model = toModelFromEntity(todo as TodoEntity);
+    }
     this.cb(null, {
       statusCode: 200,
-      body: JSON.stringify(todo)
+      body: JSON.stringify(model)
     });
   }
 }
@@ -60,10 +79,10 @@ export class TodoUpdateOutput implements ITodoUpdateOutput {
     this.cb = cb;
   }
 
-  public success(todo: Todo): void {
+  public success(todo: TodoEntity): void {
     this.cb(null, {
       statusCode: 200,
-      body: JSON.stringify(todo)
+      body: JSON.stringify(toModelFromEntity(todo))
     });
   }
 }
