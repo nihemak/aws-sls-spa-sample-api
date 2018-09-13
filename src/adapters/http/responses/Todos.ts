@@ -8,6 +8,7 @@ import {
 } from "../../../usecases/outputs/Todos";
 import { Todo as TodoEntity } from "../../../entities/Todo";
 import { Todo as TodoModel } from "../../../http/models/Todo";
+import { success } from "../../../http/views/response";
 
 function toModelFromEntity(todo: TodoEntity): TodoModel {
   return {
@@ -19,85 +20,51 @@ function toModelFromEntity(todo: TodoEntity): TodoModel {
   };
 }
 
-export class TodoCreateOutput implements ITodoCreateOutput {
-  private cb: Callback;
+abstract class TodoOutput {
+  protected cb: Callback;
 
   public constructor(cb: Callback) {
     this.cb = cb;
-  }
-
-  public success(todo: TodoEntity): void {
-    this.cb(null, {
-      statusCode: 200,
-      body: JSON.stringify(toModelFromEntity(todo))
-    });
   }
 }
 
-export class TodoListOutput implements ITodoListOutput {
-  private cb: Callback;
-
-  public constructor(cb: Callback) {
-    this.cb = cb;
+export class TodoCreateOutput extends TodoOutput implements ITodoCreateOutput {
+  public success(todo: TodoEntity): void {
+    success(this.cb, JSON.stringify(toModelFromEntity(todo)));
   }
+}
 
+export class TodoListOutput extends TodoOutput implements ITodoListOutput {
   public success(todos: TodoEntity[]): void {
-    this.cb(null, {
-      statusCode: 200,
-      body: JSON.stringify(
+    success(
+      this.cb,
+      JSON.stringify(
         todos.map(todo => {
           return toModelFromEntity(todo);
         })
       )
-    });
+    );
   }
 }
 
-export class TodoShowOutput implements ITodoShowOutput {
-  private cb: Callback;
-
-  public constructor(cb: Callback) {
-    this.cb = cb;
-  }
-
+export class TodoShowOutput extends TodoOutput implements ITodoShowOutput {
   public success(todo: TodoEntity | {}): void {
     let model = {};
     if (todo) {
       model = toModelFromEntity(todo as TodoEntity);
     }
-    this.cb(null, {
-      statusCode: 200,
-      body: JSON.stringify(model)
-    });
+    success(this.cb, JSON.stringify(model));
   }
 }
 
-export class TodoUpdateOutput implements ITodoUpdateOutput {
-  private cb: Callback;
-
-  public constructor(cb: Callback) {
-    this.cb = cb;
-  }
-
+export class TodoUpdateOutput extends TodoOutput implements ITodoUpdateOutput {
   public success(todo: TodoEntity): void {
-    this.cb(null, {
-      statusCode: 200,
-      body: JSON.stringify(toModelFromEntity(todo))
-    });
+    success(this.cb, JSON.stringify(toModelFromEntity(todo)));
   }
 }
 
-export class TodoDeleteOutput implements ITodoDeleteOutput {
-  private cb: Callback;
-
-  public constructor(cb: Callback) {
-    this.cb = cb;
-  }
-
+export class TodoDeleteOutput extends TodoOutput implements ITodoDeleteOutput {
   public success(): void {
-    this.cb(null, {
-      statusCode: 200,
-      body: JSON.stringify({})
-    });
+    success(this.cb, JSON.stringify({}));
   }
 }
