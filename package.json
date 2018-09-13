@@ -26,7 +26,7 @@
     "@middy/http-cors": "^1.0.0-alpha.16",
     "@middy/http-event-normalizer": "^1.0.0-alpha.16",
     "@middy/http-json-body-parser": "^1.0.0-alpha.16",
-    "aws-sdk": "^2.311.0",
+    "aws-sdk": "^2.315.0",
     "inversify": "^4.13.0",
     "reflect-metadata": "^0.1.12",
     "source-map-support": "^0.5.9",
@@ -51,7 +51,7 @@
     "tslint-config-standard": "^8.0.1",
     "tslint-plugin-prettier": "^1.3.0",
     "typescript": "^3.0.3",
-    "webpack": "^4.17.2"
+    "webpack": "^4.19.0"
   },
   "author": "Makoto Nihei <nihemak@gmail.com> (https://github.com/nihemak)",
   "license": "MIT",
