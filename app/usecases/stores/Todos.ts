@@ -1,4 +1,4 @@
-import Todo from "../../entities/todo";
+import { Todo } from "../../entities/Todo";
 
 export interface Todos {
   create(text: string): Promise<Todo>;

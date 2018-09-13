@@ -1,118 +1,32 @@
 import { describe, it } from "mocha";
 import { expect } from "chai";
-import { Context } from "aws-lambda";
+import { HttpContextDummy } from "../../../utils/HttpContextDummy";
 import {
   create,
   list,
   get,
   update,
   destroy
-} from "../../../http/controllers/todos";
-import { container, TYPES } from "../../../providers/container";
-import { injectable } from "inversify";
-import { Todos as TodosUseCase } from "../../../usecases/Todos";
+} from "../../../../app/http/controllers/todos";
+import { container, TYPES } from "../../../../app/providers/container";
+import { Todos as TodosUseCase } from "../../../../app/usecases/Todos";
 import {
   TodoCreateInput,
   TodoShowInput,
   TodoUpdateInput,
   TodoDeleteInput
-} from "../../../usecases/inputs/Todos";
+} from "../../../../app/usecases/inputs/Todos";
 import {
   TodoCreateOutput,
   TodoListOutput,
   TodoShowOutput,
   TodoUpdateOutput,
   TodoDeleteOutput
-} from "../../../usecases/outputs/Todos";
-import Todo from "../../../entities/todo";
-
-@injectable()
-class TodosUseCaseMock implements TodosUseCase {
-  public static create = (
-    _input: TodoCreateInput,
-    _output: TodoCreateOutput
-  ): Promise<void> => {
-    return Promise.reject();
-  };
-  public create(
-    input: TodoCreateInput,
-    output: TodoCreateOutput
-  ): Promise<void> {
-    return TodosUseCaseMock.create(input, output);
-  }
-
-  public static list = (_output: TodoListOutput): Promise<void> => {
-    return Promise.reject();
-  };
-  public list(output: TodoListOutput): Promise<void> {
-    return TodosUseCaseMock.list(output);
-  }
-
-  public static show = (
-    _input: TodoShowInput,
-    _output: TodoShowOutput
-  ): Promise<void> => {
-    return Promise.reject();
-  };
-  public show(input: TodoShowInput, output: TodoShowOutput): Promise<void> {
-    return TodosUseCaseMock.show(input, output);
-  }
-
-  public static update = (
-    _input: TodoUpdateInput,
-    _output: TodoUpdateOutput
-  ): Promise<void> => {
-    return Promise.reject();
-  };
-  public update(
-    input: TodoUpdateInput,
-    output: TodoUpdateOutput
-  ): Promise<void> {
-    return TodosUseCaseMock.update(input, output);
-  }
-
-  public static delete = (
-    _input: TodoDeleteInput,
-    _output: TodoDeleteOutput
-  ): Promise<void> => {
-    return Promise.reject();
-  };
-  public delete(
-    input: TodoDeleteInput,
-    output: TodoDeleteOutput
-  ): Promise<void> {
-    return TodosUseCaseMock.delete(input, output);
-  }
-
-  public createTable(_rc: number, _wc: number): Promise<void> {
-    return Promise.resolve();
-  }
-}
+} from "../../../../app/usecases/outputs/Todos";
+import { UseCaseTodosMock } from "../../../utils/UseCaseTodosMock";
+import { Todo } from "../../../../app/entities/Todo";
 
 describe("http/controllers/todos", () => {
-  const dummyContext: Context = {
-    callbackWaitsForEmptyEventLoop: false,
-    functionName: "dummy",
-    functionVersion: "dummy",
-    invokedFunctionArn: "dummy",
-    memoryLimitInMB: 9999,
-    awsRequestId: "dummy",
-    logGroupName: "dummy",
-    logStreamName: "dummy",
-    getRemainingTimeInMillis: () => {
-      return 0;
-    },
-    done: () => {
-      return;
-    },
-    fail: () => {
-      return;
-    },
-    succeed: () => {
-      return;
-    }
-  };
-
   describe("#create", () => {
     it("should success response when success handler.", done => {
       const todo: Todo = {
@@ -131,7 +45,7 @@ describe("http/controllers/todos", () => {
         body: JSON.stringify({ text: todo.text })
       };
 
-      TodosUseCaseMock.create = (
+      UseCaseTodosMock.create = (
         input: TodoCreateInput,
         output: TodoCreateOutput
       ): Promise<void> => {
@@ -140,9 +54,9 @@ describe("http/controllers/todos", () => {
 
         return Promise.resolve();
       };
-      container.rebind<TodosUseCase>(TYPES.USECASE_TODOS).to(TodosUseCaseMock);
+      container.rebind<TodosUseCase>(TYPES.USECASE_TODOS).to(UseCaseTodosMock);
 
-      create(event, dummyContext, (err, response) => {
+      create(event, HttpContextDummy, (err, response) => {
         expect(err).to.equal(null);
 
         expect(response).to.deep.include({
@@ -184,13 +98,13 @@ describe("http/controllers/todos", () => {
         httpMethod: "GET"
       };
 
-      TodosUseCaseMock.list = (output: TodoListOutput): Promise<void> => {
+      UseCaseTodosMock.list = (output: TodoListOutput): Promise<void> => {
         output.success(todos);
         return Promise.resolve();
       };
-      container.rebind<TodosUseCase>(TYPES.USECASE_TODOS).to(TodosUseCaseMock);
+      container.rebind<TodosUseCase>(TYPES.USECASE_TODOS).to(UseCaseTodosMock);
 
-      list(event, dummyContext, (err, response) => {
+      list(event, HttpContextDummy, (err, response) => {
         expect(err).to.equal(null);
 
         expect(response).to.deep.include({
@@ -227,7 +141,7 @@ describe("http/controllers/todos", () => {
         }
       };
 
-      TodosUseCaseMock.show = (
+      UseCaseTodosMock.show = (
         input: TodoShowInput,
         output: TodoShowOutput
       ): Promise<void> => {
@@ -236,9 +150,9 @@ describe("http/controllers/todos", () => {
 
         return Promise.resolve();
       };
-      container.rebind<TodosUseCase>(TYPES.USECASE_TODOS).to(TodosUseCaseMock);
+      container.rebind<TodosUseCase>(TYPES.USECASE_TODOS).to(UseCaseTodosMock);
 
-      get(event, dummyContext, (err, response) => {
+      get(event, HttpContextDummy, (err, response) => {
         expect(err).to.equal(null);
 
         expect(response).to.deep.include({
@@ -282,7 +196,7 @@ describe("http/controllers/todos", () => {
         })
       };
 
-      TodosUseCaseMock.update = (
+      UseCaseTodosMock.update = (
         input: TodoUpdateInput,
         output: TodoUpdateOutput
       ): Promise<void> => {
@@ -293,9 +207,9 @@ describe("http/controllers/todos", () => {
 
         return Promise.resolve();
       };
-      container.rebind<TodosUseCase>(TYPES.USECASE_TODOS).to(TodosUseCaseMock);
+      container.rebind<TodosUseCase>(TYPES.USECASE_TODOS).to(UseCaseTodosMock);
 
-      update(event, dummyContext, (err, response) => {
+      update(event, HttpContextDummy, (err, response) => {
         expect(err).to.equal(null);
 
         expect(response.statusCode).to.equal(200);
@@ -321,7 +235,7 @@ describe("http/controllers/todos", () => {
         }
       };
 
-      TodosUseCaseMock.delete = (
+      UseCaseTodosMock.delete = (
         input: TodoDeleteInput,
         output: TodoDeleteOutput
       ): Promise<void> => {
@@ -330,9 +244,9 @@ describe("http/controllers/todos", () => {
 
         return Promise.resolve();
       };
-      container.rebind<TodosUseCase>(TYPES.USECASE_TODOS).to(TodosUseCaseMock);
+      container.rebind<TodosUseCase>(TYPES.USECASE_TODOS).to(UseCaseTodosMock);
 
-      destroy(event, dummyContext, (err, response) => {
+      destroy(event, HttpContextDummy, (err, response) => {
         expect(err).to.equal(null);
 
         expect(response).to.deep.equal({

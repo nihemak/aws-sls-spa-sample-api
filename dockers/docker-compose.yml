@@ -17,7 +17,7 @@ services:
       CORS: '*'
       TZ: 'Asia/Tokyo'
     volumes:
-      - ../:/app/
+      - ../:/src/
     depends_on:
       - dynamodb
   dynamodb:

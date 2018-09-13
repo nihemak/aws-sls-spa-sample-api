@@ -1,33 +1,11 @@
 import { describe, it } from "mocha";
 import { expect } from "chai";
 import { APIGatewayEvent, Callback, Context } from "aws-lambda";
+import { HttpContextDummy } from "../../../utils/HttpContextDummy";
 import middy from "@middy/core";
-import { requestValidator } from "../../../http/middlewares/request-validator";
+import { requestValidator } from "../../../../app/http/middlewares/request-validator";
 
 describe("http/middlewares/requestValidator", () => {
-  const dummyContext: Context = {
-    callbackWaitsForEmptyEventLoop: false,
-    functionName: "dummy",
-    functionVersion: "dummy",
-    invokedFunctionArn: "dummy",
-    memoryLimitInMB: 9999,
-    awsRequestId: "dummy",
-    logGroupName: "dummy",
-    logStreamName: "dummy",
-    getRemainingTimeInMillis: () => {
-      return 0;
-    },
-    done: () => {
-      return;
-    },
-    fail: () => {
-      return;
-    },
-    succeed: () => {
-      return;
-    }
-  };
-
   it("should success when rules match.", done => {
     const handler: middy.IMiddy = middy(
       async (event: APIGatewayEvent, _: Context, cb: Callback) => {
@@ -47,7 +25,7 @@ describe("http/middlewares/requestValidator", () => {
       body: body
     };
 
-    handler(event, dummyContext, (err, response) => {
+    handler(event, HttpContextDummy, (err, response) => {
       expect(err).to.equal(null);
       expect(response.statusCode).to.equal(200);
       expect(JSON.parse(response.body)).to.deep.equal(body);
@@ -72,7 +50,7 @@ describe("http/middlewares/requestValidator", () => {
     const event = {
       body: { foo2: "bar" }
     };
-    handler(event, dummyContext, (err, response) => {
+    handler(event, HttpContextDummy, (err, response) => {
       expect(err as any).to.deep.equal({
         statusCode: 400,
         message: "There is an error in the parameter.",
