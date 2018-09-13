@@ -1,33 +1,11 @@
 import { describe, it } from "mocha";
 import { expect } from "chai";
 import { APIGatewayEvent, Callback, Context } from "aws-lambda";
+import { HttpContextDummy } from "../../../utils/HttpContextDummy";
 import middy from "@middy/core";
-import { errorHandler } from "../../../http/middlewares/error-handler";
+import { errorHandler } from "../../../../http/middlewares/error-handler";
 
 describe("http/middlewares/errorHandler", () => {
-  const dummyContext: Context = {
-    callbackWaitsForEmptyEventLoop: false,
-    functionName: "dummy",
-    functionVersion: "dummy",
-    invokedFunctionArn: "dummy",
-    memoryLimitInMB: 9999,
-    awsRequestId: "dummy",
-    logGroupName: "dummy",
-    logStreamName: "dummy",
-    getRemainingTimeInMillis: () => {
-      return 0;
-    },
-    done: () => {
-      return;
-    },
-    fail: () => {
-      return;
-    },
-    succeed: () => {
-      return;
-    }
-  };
-
   it("should success response when success handler.", done => {
     const handler: middy.IMiddy = middy(
       async (event: APIGatewayEvent, _: Context, cb: Callback) => {
@@ -44,7 +22,7 @@ describe("http/middlewares/errorHandler", () => {
       body: body
     };
 
-    handler(event, dummyContext, (err, response) => {
+    handler(event, HttpContextDummy, (err, response) => {
       expect(err).to.equal(null);
       expect(response.statusCode).to.equal(200);
       expect(JSON.parse(response.body)).to.deep.equal(body);
@@ -64,7 +42,7 @@ describe("http/middlewares/errorHandler", () => {
     );
     handler.use(errorHandler());
 
-    handler({}, dummyContext, (err, response) => {
+    handler({}, HttpContextDummy, (err, response) => {
       expect(err).to.equal(null);
       expect(response.statusCode).to.equal(300);
       expect(JSON.parse(response.body)).to.deep.equal({
