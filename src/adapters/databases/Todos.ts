@@ -1,7 +1,7 @@
 import { injectable } from "inversify";
 import "reflect-metadata";
 import { Todos as ITodos } from "../../usecases/stores/Todos";
-import { Todo } from "../../entities/todo";
+import { Todo } from "../../entities/Todo";
 import { TodoRecord, Todos as TodoTable } from "../../databases/Todos";
 
 @injectable()

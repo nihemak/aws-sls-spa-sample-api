@@ -1,7 +1,7 @@
 import { container, TYPES } from "../../providers/container";
 import { injectable } from "inversify";
 import "reflect-metadata";
-import { Todo } from "../../entities/todo";
+import { Todo } from "../../entities/Todo";
 import { Todos as TodoStore } from "../stores/Todos";
 import { Todos as ITodos } from "../Todos";
 import {

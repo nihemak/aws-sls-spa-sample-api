@@ -3,7 +3,7 @@ import { expect } from "chai";
 import { container, TYPES } from "../../providers/container";
 import { injectable } from "inversify";
 import { Todos as TodoStore } from "../../usecases/stores/Todos";
-import { Todo } from "../../entities/todo";
+import { Todo } from "../../entities/Todo";
 import { Todos as UseCase } from "../../usecases/Todos";
 import {
   TodoCreateInput,

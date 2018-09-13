@@ -6,7 +6,7 @@ import {
   TodoUpdateOutput as ITodoUpdateOutput,
   TodoDeleteOutput as ITodoDeleteOutput
 } from "../../../usecases/outputs/Todos";
-import { Todo as TodoEntity } from "../../../entities/todo";
+import { Todo as TodoEntity } from "../../../entities/Todo";
 import { Todo as TodoModel } from "../../../http/models/Todo";
 
 function toModelFromEntity(todo: TodoEntity): TodoModel {
