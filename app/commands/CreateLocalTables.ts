@@ -1,5 +1,5 @@
-import { container, TYPES } from "../providers/container";
-import { Todos } from "../usecases/stores/Todos";
+import { container, TYPES } from "app/providers/container";
+import { Todos } from "app/usecases/stores/Todos";
 
 container
   .get<Todos>(TYPES.STORE_TODOS)

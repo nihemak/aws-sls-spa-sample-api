@@ -5,10 +5,10 @@ import {
   TodoShowOutput as ITodoShowOutput,
   TodoUpdateOutput as ITodoUpdateOutput,
   TodoDeleteOutput as ITodoDeleteOutput
-} from "../../../usecases/outputs/Todos";
-import { Todo as TodoEntity } from "../../../entities/Todo";
-import { Todo as TodoModel } from "../../../http/models/Todo";
-import { success } from "../../../http/views/response";
+} from "app/usecases/outputs/Todos";
+import { Todo as TodoEntity } from "app/entities/Todo";
+import { Todo as TodoModel } from "app/http/models/Todo";
+import { success } from "app/http/views/response";
 
 function toModelFromEntity(todo: TodoEntity): TodoModel {
   return {

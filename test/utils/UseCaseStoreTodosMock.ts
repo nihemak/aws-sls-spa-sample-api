@@ -1,6 +1,6 @@
 import { injectable } from "inversify";
-import { Todos } from "../../app/usecases/stores/Todos";
-import { Todo } from "../../app/entities/Todo";
+import { Todos } from "app/usecases/stores/Todos";
+import { Todo } from "app/entities/Todo";
 
 @injectable()
 export class UseCaseStoreTodosMock implements Todos {

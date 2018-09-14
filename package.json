@@ -12,11 +12,11 @@
     "docker-down": "npm run docker-compose -- down",
     "docker-test-all": "npm run docker-down && npm run docker-up-dev && npm run docker-exec-sls -- npm run test-all && npm run docker-down",
     "docker-offline": "npm run docker-exec-sls -- sls offline --host 0.0.0.0",
-    "docker-create-tables": "npm run docker-exec-sls -- ./node_modules/.bin/ts-node app/commands/CreateLocalTables.ts",
+    "docker-create-tables": "npm run docker-exec-sls -- ./node_modules/.bin/ts-node -r tsconfig-paths/register app/commands/CreateLocalTables.ts",
     "lint": "node_modules/tslint/bin/tslint -c ./tslint.json --project . **/*.ts",
     "lint-fix": "node_modules/tslint/bin/tslint -c ./tslint.json --project . --fix **/*.ts",
     "webpack": "serverless webpack",
-    "test": "./node_modules/.bin/mocha -r ts-node/register test/units/**/*.spec.ts test/units/**/**/*.spec.ts",
+    "test": "./node_modules/.bin/mocha -r ts-node/register -r tsconfig-paths/register test/units/**/*.spec.ts test/units/**/**/*.spec.ts",
     "test-all": "npm-run-all lint webpack test"
   },
   "dependencies": {
@@ -46,6 +46,8 @@
     "serverless-webpack": "^5.1.1",
     "ts-loader": "^5.1.0",
     "ts-node": "^7.0.1",
+    "tsconfig-paths": "^3.6.0",
+    "tsconfig-paths-webpack-plugin": "^3.2.0",
     "tslint": "^5.11.0",
     "tslint-config-prettier": "^1.15.0",
     "tslint-config-standard": "^8.0.1",

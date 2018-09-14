@@ -1,30 +1,24 @@
 import { describe, it } from "mocha";
 import { expect } from "chai";
-import { HttpContextDummy } from "../../../utils/HttpContextDummy";
-import {
-  create,
-  list,
-  get,
-  update,
-  destroy
-} from "../../../../app/http/controllers/todos";
-import { container, TYPES } from "../../../../app/providers/container";
-import { Todos as TodosUseCase } from "../../../../app/usecases/Todos";
+import { HttpContextDummy } from "test/utils/HttpContextDummy";
+import { create, list, get, update, destroy } from "app/http/controllers/todos";
+import { container, TYPES } from "app/providers/container";
+import { Todos as TodosUseCase } from "app/usecases/Todos";
 import {
   TodoCreateInput,
   TodoShowInput,
   TodoUpdateInput,
   TodoDeleteInput
-} from "../../../../app/usecases/inputs/Todos";
+} from "app/usecases/inputs/Todos";
 import {
   TodoCreateOutput,
   TodoListOutput,
   TodoShowOutput,
   TodoUpdateOutput,
   TodoDeleteOutput
-} from "../../../../app/usecases/outputs/Todos";
-import { UseCaseTodosMock } from "../../../utils/UseCaseTodosMock";
-import { Todo } from "../../../../app/entities/Todo";
+} from "app/usecases/outputs/Todos";
+import { UseCaseTodosMock } from "test/utils/UseCaseTodosMock";
+import { Todo } from "app/entities/Todo";
 
 describe("http/controllers/todos", () => {
   describe("#create", () => {

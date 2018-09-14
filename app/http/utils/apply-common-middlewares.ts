@@ -2,7 +2,7 @@ import middy from "@middy/core";
 import httpEventNormalizer from "@middy/http-event-normalizer";
 import httpJsonBodyParser from "@middy/http-json-body-parser";
 import cors from "@middy/http-cors";
-import { errorHandler } from "../middlewares/error-handler";
+import { errorHandler } from "app/http/middlewares/error-handler";
 
 export function applyCommonMiddlewares(handler: middy.IMiddy): middy.IMiddy {
   return handler

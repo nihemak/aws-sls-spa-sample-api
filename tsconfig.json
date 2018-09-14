@@ -20,7 +20,11 @@
     "esModuleInterop": true,
     "experimentalDecorators": true,
     "emitDecoratorMetadata": true,
-    "baseUrl": "./"
+    "baseUrl": "./",
+    "paths": {
+      "app/*": ["app/*"],
+      "test/*": ["test/*"]
+    }
   },
   "exclude": [
     "node_modules"

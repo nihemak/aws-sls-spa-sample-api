@@ -1,22 +1,22 @@
-import { container, TYPES } from "../../providers/container";
+import { container, TYPES } from "app/providers/container";
 import { injectable } from "inversify";
 import "reflect-metadata";
-import { Todo } from "../../entities/Todo";
-import { Todos as TodoStore } from "../stores/Todos";
-import { Todos as ITodos } from "../Todos";
+import { Todo } from "app/entities/Todo";
+import { Todos as TodoStore } from "app/usecases/stores/Todos";
+import { Todos as ITodos } from "app/usecases/Todos";
 import {
   TodoCreateInput,
   TodoShowInput,
   TodoUpdateInput,
   TodoDeleteInput
-} from "../../usecases/inputs/Todos";
+} from "app/usecases/inputs/Todos";
 import {
   TodoCreateOutput,
   TodoListOutput,
   TodoShowOutput,
   TodoUpdateOutput,
   TodoDeleteOutput
-} from "../../usecases/outputs/Todos";
+} from "app/usecases/outputs/Todos";
 
 @injectable()
 export class Todos implements ITodos {
