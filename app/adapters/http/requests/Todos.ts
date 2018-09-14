@@ -3,7 +3,7 @@ import {
   TodoShowInput as ITodoShowInput,
   TodoUpdateInput as ITodoUpdateInput,
   TodoDeleteInput as ITodoDeleteInput
-} from "../../../usecases/inputs/Todos";
+} from "app/usecases/inputs/Todos";
 
 export class TodoCreateInput implements ITodoCreateInput {
   private text: string;

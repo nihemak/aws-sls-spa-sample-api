@@ -1,23 +1,23 @@
 import { describe, it } from "mocha";
 import { expect } from "chai";
-import { container, TYPES } from "../../../app/providers/container";
-import { Todos as TodoStore } from "../../../app/usecases/stores/Todos";
-import { Todo } from "../../../app/entities/Todo";
-import { Todos as UseCase } from "../../../app/usecases/Todos";
+import { container, TYPES } from "app/providers/container";
+import { Todos as TodoStore } from "app/usecases/stores/Todos";
+import { Todo } from "app/entities/Todo";
+import { Todos as UseCase } from "app/usecases/Todos";
 import {
   TodoCreateInput,
   TodoShowInput,
   TodoUpdateInput,
   TodoDeleteInput
-} from "../../../app/usecases/inputs/Todos";
+} from "app/usecases/inputs/Todos";
 import {
   TodoCreateOutput,
   TodoListOutput,
   TodoShowOutput,
   TodoUpdateOutput,
   TodoDeleteOutput
-} from "../../../app/usecases/outputs/Todos";
-import { UseCaseStoreTodosMock } from "../../utils/UseCaseStoreTodosMock";
+} from "app/usecases/outputs/Todos";
+import { UseCaseStoreTodosMock } from "test/utils/UseCaseStoreTodosMock";
 
 describe("usecases/Todos/implementations", () => {
   describe("#create", () => {

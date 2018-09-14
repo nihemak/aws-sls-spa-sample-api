@@ -1,9 +1,9 @@
 import { describe, it } from "mocha";
 import { expect } from "chai";
 import { APIGatewayEvent, Callback, Context } from "aws-lambda";
-import { HttpContextDummy } from "../../../utils/HttpContextDummy";
+import { HttpContextDummy } from "test/utils/HttpContextDummy";
 import middy from "@middy/core";
-import { requestValidator } from "../../../../app/http/middlewares/request-validator";
+import { requestValidator } from "app/http/middlewares/request-validator";
 
 describe("http/middlewares/requestValidator", () => {
   it("should success when rules match.", done => {

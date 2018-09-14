@@ -1,22 +1,22 @@
 import { APIGatewayEvent, Callback, Context } from "aws-lambda";
 import middy from "@middy/core";
-import { applyCommonMiddlewares } from "../utils/apply-common-middlewares";
-import { requestValidator } from "../middlewares/request-validator";
-import { container, TYPES } from "../../providers/container";
-import { Todos as UseCase } from "../../usecases/Todos";
+import { applyCommonMiddlewares } from "app/http/utils/apply-common-middlewares";
+import { requestValidator } from "app/http/middlewares/request-validator";
+import { container, TYPES } from "app/providers/container";
+import { Todos as UseCase } from "app/usecases/Todos";
 import {
   TodoCreateInput,
   TodoShowInput,
   TodoUpdateInput,
   TodoDeleteInput
-} from "../../adapters/http/requests/Todos";
+} from "app/adapters/http/requests/Todos";
 import {
   TodoCreateOutput,
   TodoListOutput,
   TodoShowOutput,
   TodoUpdateOutput,
   TodoDeleteOutput
-} from "../../adapters/http/responses/Todos";
+} from "app/adapters/http/responses/Todos";
 
 export const create: middy.IMiddy = applyCommonMiddlewares(
   middy(async (event: APIGatewayEvent, _: Context, cb: Callback) => {

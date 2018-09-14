@@ -1,18 +1,18 @@
 import { injectable } from "inversify";
-import { Todos } from "../../app/usecases/Todos";
+import { Todos } from "app/usecases/Todos";
 import {
   TodoCreateInput,
   TodoShowInput,
   TodoUpdateInput,
   TodoDeleteInput
-} from "../../app/usecases/inputs/Todos";
+} from "app/usecases/inputs/Todos";
 import {
   TodoCreateOutput,
   TodoListOutput,
   TodoShowOutput,
   TodoUpdateOutput,
   TodoDeleteOutput
-} from "../../app/usecases/outputs/Todos";
+} from "app/usecases/outputs/Todos";
 
 @injectable()
 export class UseCaseTodosMock implements Todos {
