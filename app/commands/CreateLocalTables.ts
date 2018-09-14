@@ -1,9 +1,12 @@
 import { container, TYPES } from "app/providers/container";
-import { Todos } from "app/usecases/stores/Todos";
+import { Todos as UseCase } from "app/usecases/Todos";
+import { TodoCreateTableInput } from "app/adapters/commands/Todos";
 
 container
-  .get<Todos>(TYPES.STORE_TODOS)
-  .createTable(1 /* readCapacity */, 1 /* writeCapacity */)
+  .get<UseCase>(TYPES.USECASE_TODOS)
+  .createTable(
+    new TodoCreateTableInput(1 /* readCapacity */, 1 /* writeCapacity */)
+  )
   .then(() => {
     console.log("Tables has been created");
   })

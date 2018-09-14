@@ -8,7 +8,8 @@ import {
   TodoCreateInput,
   TodoShowInput,
   TodoUpdateInput,
-  TodoDeleteInput
+  TodoDeleteInput,
+  TodoCreateTableInput
 } from "app/usecases/inputs/Todos";
 import {
   TodoCreateOutput,
@@ -65,5 +66,12 @@ export class Todos implements ITodos {
   ): Promise<void> {
     await this.store.delete(input.getId());
     output.success();
+  }
+
+  public async createTable(input: TodoCreateTableInput): Promise<void> {
+    await this.store.createTable(
+      input.getReadCapacity(),
+      input.getWriteCapacity()
+    );
   }
 }

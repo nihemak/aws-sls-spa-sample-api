@@ -4,7 +4,8 @@ import {
   TodoCreateInput,
   TodoShowInput,
   TodoUpdateInput,
-  TodoDeleteInput
+  TodoDeleteInput,
+  TodoCreateTableInput
 } from "app/usecases/inputs/Todos";
 import {
   TodoCreateOutput,
@@ -72,7 +73,7 @@ export class UseCaseTodosMock implements Todos {
     return UseCaseTodosMock.delete(input, output);
   }
 
-  public createTable(_rc: number, _wc: number): Promise<void> {
+  public createTable(_input: TodoCreateTableInput): Promise<void> {
     return Promise.resolve();
   }
 }
