@@ -19,3 +19,8 @@ export interface TodoUpdateOutput {
 export interface TodoDeleteOutput {
   success(): void;
 }
+
+export interface TodoCreateTableOutput {
+  success(): void;
+  failed(error: any): void;
+}

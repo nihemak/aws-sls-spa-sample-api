@@ -1,15 +1,21 @@
 import { container, TYPES } from "app/providers/container";
 import { Todos as UseCase } from "app/usecases/Todos";
-import { TodoCreateTableInput } from "app/adapters/commands/Todos";
+import {
+  TodoCreateTableInput,
+  TodoCreateTableOutput
+} from "app/adapters/commands/Todos";
+
+const readCapacity = 1;
+const writeCapacity = 1;
 
 container
   .get<UseCase>(TYPES.USECASE_TODOS)
   .createTable(
-    new TodoCreateTableInput(1 /* readCapacity */, 1 /* writeCapacity */)
+    new TodoCreateTableInput(readCapacity, writeCapacity),
+    new TodoCreateTableOutput()
   )
-  .then(() => {
-    console.log("Tables has been created");
-  })
-  .catch(error => {
-    console.error("Error creating tables: " + error);
+  .then(() => console.log("done"))
+  .catch(err => {
+    console.error("Internal error: " + err);
+    process.exit(99);
   });

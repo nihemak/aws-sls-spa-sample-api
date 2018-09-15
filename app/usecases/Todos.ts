@@ -10,7 +10,8 @@ import {
   TodoListOutput,
   TodoShowOutput,
   TodoUpdateOutput,
-  TodoDeleteOutput
+  TodoDeleteOutput,
+  TodoCreateTableOutput
 } from "./outputs/Todos";
 
 export interface Todos {
@@ -19,5 +20,8 @@ export interface Todos {
   show(input: TodoShowInput, output: TodoShowOutput): Promise<void>;
   update(input: TodoUpdateInput, output: TodoUpdateOutput): Promise<void>;
   delete(input: TodoDeleteInput, output: TodoDeleteOutput): Promise<void>;
-  createTable(input: TodoCreateTableInput): Promise<void>;
+  createTable(
+    input: TodoCreateTableInput,
+    output: TodoCreateTableOutput
+  ): Promise<void>;
 }
