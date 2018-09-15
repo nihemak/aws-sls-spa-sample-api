@@ -43,11 +43,17 @@ export class UseCaseStoreTodosMock implements Todos {
     return UseCaseStoreTodosMock.delete(id);
   }
 
-  public createTable(_rc: number, _wc: number): Promise<void> {
+  public static createTable = (_rc: number, _wc: number): Promise<void> => {
     return Promise.resolve();
+  };
+  public createTable(rc: number, wc: number): Promise<void> {
+    return UseCaseStoreTodosMock.createTable(rc, wc);
   }
 
-  public deleteTable(): Promise<void> {
+  public static deleteTable = (): Promise<void> => {
     return Promise.resolve();
+  };
+  public deleteTable(): Promise<void> {
+    return UseCaseStoreTodosMock.deleteTable();
   }
 }
