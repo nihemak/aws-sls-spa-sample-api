@@ -16,7 +16,7 @@ export interface TodoDeleteInput {
   getId(): string;
 }
 
-export interface TodoCreateTableInput {
+export interface TodoResetTableInput {
   getReadCapacity(): number;
   getWriteCapacity(): number;
 }

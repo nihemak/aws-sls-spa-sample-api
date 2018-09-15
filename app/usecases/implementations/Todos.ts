@@ -9,7 +9,7 @@ import {
   TodoShowInput,
   TodoUpdateInput,
   TodoDeleteInput,
-  TodoCreateTableInput
+  TodoResetTableInput
 } from "app/usecases/inputs/Todos";
 import {
   TodoCreateOutput,
@@ -17,7 +17,7 @@ import {
   TodoShowOutput,
   TodoUpdateOutput,
   TodoDeleteOutput,
-  TodoCreateTableOutput
+  TodoResetTableOutput
 } from "app/usecases/outputs/Todos";
 
 @injectable()
@@ -69,9 +69,9 @@ export class Todos implements ITodos {
     output.success();
   }
 
-  public async createTable(
-    input: TodoCreateTableInput,
-    output: TodoCreateTableOutput
+  public async resetTable(
+    input: TodoResetTableInput,
+    output: TodoResetTableOutput
   ): Promise<void> {
     try {
       await this.store.deleteTable();

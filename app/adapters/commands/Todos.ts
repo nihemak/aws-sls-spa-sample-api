@@ -1,7 +1,7 @@
-import { TodoCreateTableInput as ITodoCreateTableInput } from "app/usecases/inputs/Todos";
-import { TodoCreateTableOutput as ITodoCreateTableOutput } from "app/usecases/outputs/Todos";
+import { TodoResetTableInput as ITodoResetTableInput } from "app/usecases/inputs/Todos";
+import { TodoResetTableOutput as ITodoResetTableOutput } from "app/usecases/outputs/Todos";
 
-export class TodoCreateTableInput implements ITodoCreateTableInput {
+export class TodoResetTableInput implements ITodoResetTableInput {
   private readCapacity: number;
   private writeCapacity: number;
 
@@ -18,7 +18,7 @@ export class TodoCreateTableInput implements ITodoCreateTableInput {
   }
 }
 
-export class TodoCreateTableOutput implements ITodoCreateTableOutput {
+export class TodoResetTableOutput implements ITodoResetTableOutput {
   public success(): void {
     console.log("Todos table has been created");
   }

@@ -20,7 +20,7 @@ export interface TodoDeleteOutput {
   success(): void;
 }
 
-export interface TodoCreateTableOutput {
+export interface TodoResetTableOutput {
   success(): void;
   failed(error: any): void;
 }
