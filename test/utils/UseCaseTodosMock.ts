@@ -71,8 +71,4 @@ export class UseCaseTodosMock implements Todos {
   ): Promise<void> {
     return UseCaseTodosMock.delete(input, output);
   }
-
-  public createTable(_rc: number, _wc: number): Promise<void> {
-    return Promise.resolve();
-  }
 }

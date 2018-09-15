@@ -7,4 +7,5 @@ export interface Todos {
   update(id: string, text: string, checked: boolean): Promise<Todo>;
   delete(id: string): Promise<void>;
   createTable(rc: number, wc: number): Promise<void>;
+  deleteTable(): Promise<void>;
 }

@@ -12,7 +12,7 @@
     "docker-down": "npm run docker-compose -- down",
     "docker-test-all": "npm run docker-down && npm run docker-up-dev && npm run docker-exec-sls -- npm run test-all && npm run docker-down",
     "docker-offline": "npm run docker-exec-sls -- sls offline --host 0.0.0.0",
-    "docker-create-tables": "npm run docker-exec-sls -- ./node_modules/.bin/ts-node -r tsconfig-paths/register app/commands/CreateLocalTables.ts",
+    "docker-reset-tables": "npm run docker-exec-sls -- ./node_modules/.bin/ts-node -r tsconfig-paths/register app/commands/ResetAllTables.ts",
     "lint": "node_modules/tslint/bin/tslint -c ./tslint.json --project . **/*.ts",
     "lint-fix": "node_modules/tslint/bin/tslint -c ./tslint.json --project . --fix **/*.ts",
     "webpack": "serverless webpack",

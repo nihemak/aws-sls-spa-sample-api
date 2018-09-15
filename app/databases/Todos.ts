@@ -92,4 +92,8 @@ export class Todos {
       writeCapacityUnits: wc
     });
   }
+
+  public async ensureTableNotExists(): Promise<void> {
+    await mapper.ensureTableNotExists(TodoRecord);
+  }
 }

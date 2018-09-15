@@ -50,6 +50,10 @@ export class Todos implements ITodos {
     return this.table.createTable(rc, wc);
   }
 
+  public deleteTable(): Promise<void> {
+    return this.table.ensureTableNotExists();
+  }
+
   private recordToEntitiy(record: TodoRecord): Todo {
     return {
       id: record.id,
