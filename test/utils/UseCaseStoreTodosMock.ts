@@ -46,4 +46,8 @@ export class UseCaseStoreTodosMock implements Todos {
   public createTable(_rc: number, _wc: number): Promise<void> {
     return Promise.resolve();
   }
+
+  public deleteTable(): Promise<void> {
+    return Promise.resolve();
+  }
 }

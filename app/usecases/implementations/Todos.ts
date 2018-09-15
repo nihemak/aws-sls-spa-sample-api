@@ -74,10 +74,12 @@ export class Todos implements ITodos {
     output: TodoCreateTableOutput
   ): Promise<void> {
     try {
+      await this.store.deleteTable();
       await this.store.createTable(
         input.getReadCapacity(),
         input.getWriteCapacity()
       );
+      output.success();
     } catch (err) {
       output.failed(err);
     }
