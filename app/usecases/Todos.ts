@@ -2,16 +2,14 @@ import {
   TodoCreateInput,
   TodoShowInput,
   TodoUpdateInput,
-  TodoDeleteInput,
-  TodoResetTableInput
+  TodoDeleteInput
 } from "./inputs/Todos";
 import {
   TodoCreateOutput,
   TodoListOutput,
   TodoShowOutput,
   TodoUpdateOutput,
-  TodoDeleteOutput,
-  TodoResetTableOutput
+  TodoDeleteOutput
 } from "./outputs/Todos";
 
 export interface Todos {
@@ -20,8 +18,4 @@ export interface Todos {
   show(input: TodoShowInput, output: TodoShowOutput): Promise<void>;
   update(input: TodoUpdateInput, output: TodoUpdateOutput): Promise<void>;
   delete(input: TodoDeleteInput, output: TodoDeleteOutput): Promise<void>;
-  resetTable(
-    input: TodoResetTableInput,
-    output: TodoResetTableOutput
-  ): Promise<void>;
 }

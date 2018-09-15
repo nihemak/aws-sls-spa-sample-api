@@ -1,18 +1,18 @@
 import { container, TYPES } from "app/providers/container";
-import { Todos as UseCase } from "app/usecases/Todos";
+import { System as UseCase } from "app/usecases/System";
 import {
-  TodoResetTableInput,
-  TodoResetTableOutput
-} from "app/adapters/commands/Todos";
+  SystemResetStoresInput,
+  SystemResetStoresOutput
+} from "app/adapters/commands/ResetAllTables";
 
 const readCapacity = 1;
 const writeCapacity = 1;
 
 container
-  .get<UseCase>(TYPES.USECASE_TODOS)
-  .resetTable(
-    new TodoResetTableInput(readCapacity, writeCapacity),
-    new TodoResetTableOutput()
+  .get<UseCase>(TYPES.USECASE_SYSTEM)
+  .resetAllStores(
+    new SystemResetStoresInput(readCapacity, writeCapacity),
+    new SystemResetStoresOutput()
   )
   .then(() => console.log("done"))
   .catch(err => {

@@ -19,8 +19,3 @@ export interface TodoUpdateOutput {
 export interface TodoDeleteOutput {
   success(): void;
 }
-
-export interface TodoResetTableOutput {
-  success(): void;
-  failed(error: any): void;
-}

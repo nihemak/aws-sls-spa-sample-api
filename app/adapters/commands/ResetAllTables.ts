@@ -1,7 +1,7 @@
-import { TodoResetTableInput as ITodoResetTableInput } from "app/usecases/inputs/Todos";
-import { TodoResetTableOutput as ITodoResetTableOutput } from "app/usecases/outputs/Todos";
+import { SystemResetStoresInput as ISystemResetStoresInput } from "app/usecases/inputs/System";
+import { SystemResetStoresOutput as ISystemResetStoresOutput } from "app/usecases/outputs/System";
 
-export class TodoResetTableInput implements ITodoResetTableInput {
+export class SystemResetStoresInput implements ISystemResetStoresInput {
   private readCapacity: number;
   private writeCapacity: number;
 
@@ -10,15 +10,15 @@ export class TodoResetTableInput implements ITodoResetTableInput {
     this.writeCapacity = writeCapacity;
   }
 
-  public getReadCapacity(): number {
+  public getTodosReadCapacity(): number {
     return this.readCapacity;
   }
-  public getWriteCapacity(): number {
+  public getTodosWriteCapacity(): number {
     return this.writeCapacity;
   }
 }
 
-export class TodoResetTableOutput implements ITodoResetTableOutput {
+export class SystemResetStoresOutput implements ISystemResetStoresOutput {
   public success(): void {
     console.log("Todos table has been created");
   }

@@ -8,16 +8,14 @@ import {
   TodoCreateInput,
   TodoShowInput,
   TodoUpdateInput,
-  TodoDeleteInput,
-  TodoResetTableInput
+  TodoDeleteInput
 } from "app/usecases/inputs/Todos";
 import {
   TodoCreateOutput,
   TodoListOutput,
   TodoShowOutput,
   TodoUpdateOutput,
-  TodoDeleteOutput,
-  TodoResetTableOutput
+  TodoDeleteOutput
 } from "app/usecases/outputs/Todos";
 
 @injectable()
@@ -67,21 +65,5 @@ export class Todos implements ITodos {
   ): Promise<void> {
     await this.store.delete(input.getId());
     output.success();
-  }
-
-  public async resetTable(
-    input: TodoResetTableInput,
-    output: TodoResetTableOutput
-  ): Promise<void> {
-    try {
-      await this.store.deleteTable();
-      await this.store.createTable(
-        input.getReadCapacity(),
-        input.getWriteCapacity()
-      );
-      output.success();
-    } catch (err) {
-      output.failed(err);
-    }
   }
 }
