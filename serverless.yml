@@ -20,12 +20,6 @@ provider:
     name: ${env:DEPLOY_BUCKET}
 
 functions:
-  hello:
-    handler: app/http/controllers/hellos.hello
-    events:
-      - http:
-          method: get
-          path: hello
   create:
     handler: app/http/controllers/todos.create
     events:
