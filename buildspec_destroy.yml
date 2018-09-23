@@ -1,0 +1,15 @@
+version: 0.2
+phases:
+  install:
+    commands:
+      - npm install -g serverless@1.30.0
+      - npm install
+  build:
+    commands:
+      - serverless remove
+  post_build:
+    commands:
+      - touch api_destroy.fin
+artifacts:
+  files:
+    - api_destroy.fin
