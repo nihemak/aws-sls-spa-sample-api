@@ -65,8 +65,8 @@ export const update: middy.IMiddy = applyCommonMiddlewares(
 ).use(
   requestValidator({
     id: ["required", "string"],
-    text: ["required", "string"],
-    checked: ["required", "boolean"]
+    text: ["string"],
+    checked: ["boolean"]
   })
 );
 
