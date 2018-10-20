@@ -64,7 +64,7 @@ export class TodoUpdateOutput extends TodoOutput implements ITodoUpdateOutput {
 }
 
 export class TodoDeleteOutput extends TodoOutput implements ITodoDeleteOutput {
-  public success(): void {
-    success(this.cb, JSON.stringify({}));
+  public success(id: string): void {
+    success(this.cb, JSON.stringify({ id }));
   }
 }

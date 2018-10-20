@@ -233,8 +233,9 @@ describe("http/controllers/todos", () => {
         input: TodoDeleteInput,
         output: TodoDeleteOutput
       ): Promise<void> => {
-        expect(input.getId()).to.equal(todo.id);
-        output.success();
+        const todoId: string = input.getId();
+        expect(todoId).to.equal(todo.id);
+        output.success(todoId);
 
         return Promise.resolve();
       };
@@ -250,7 +251,7 @@ describe("http/controllers/todos", () => {
               "Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,Cache-control,Pragma,X-Frame-Options",
             "Access-Control-Allow-Origin": "*"
           },
-          body: "{}"
+          body: JSON.stringify({ id: todo.id })
         });
 
         done();

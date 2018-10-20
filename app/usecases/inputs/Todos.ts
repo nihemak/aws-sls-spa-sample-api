@@ -8,8 +8,8 @@ export interface TodoShowInput {
 
 export interface TodoUpdateInput {
   getId(): string;
-  getText(): string;
-  getChecked(): boolean;
+  getText(): string | undefined;
+  getChecked(): boolean | undefined;
 }
 
 export interface TodoDeleteInput {

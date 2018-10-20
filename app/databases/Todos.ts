@@ -69,14 +69,18 @@ export class Todos {
 
   public async update(
     id: string,
-    text: string,
-    checked: boolean
+    text: string | undefined,
+    checked: boolean | undefined
   ): Promise<TodoRecord> {
     const myItem = await mapper.get(
       Object.assign(new TodoRecord(), { id: id })
     );
-    myItem.text = text;
-    myItem.checked = checked;
+    if (typeof text !== "undefined") {
+      myItem.text = text;
+    }
+    if (typeof checked !== "undefined") {
+      myItem.checked = checked;
+    }
     myItem.updatedAt = new Date().getTime();
     const objectSaved = await mapper.update(myItem);
     return objectSaved;

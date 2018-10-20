@@ -39,19 +39,19 @@ export class TodoUpdateInput implements ITodoUpdateInput {
     eventBody: { [field: string]: any }
   ) {
     this.id = eventPathParameters.id;
-    this.text = eventBody.text;
-    this.checked = eventBody.checked;
+    this.text = "text" in eventBody ? eventBody.text : undefined;
+    this.checked = "checked" in eventBody ? eventBody.checked : undefined;
   }
 
   public getId(): string {
     return this.id;
   }
 
-  public getText(): string {
+  public getText(): string | undefined {
     return this.text;
   }
 
-  public getChecked(): boolean {
+  public getChecked(): boolean | undefined {
     return this.checked;
   }
 }

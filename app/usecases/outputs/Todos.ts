@@ -17,5 +17,5 @@ export interface TodoUpdateOutput {
 }
 
 export interface TodoDeleteOutput {
-  success(): void;
+  success(id: string): void;
 }

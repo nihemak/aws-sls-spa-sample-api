@@ -63,7 +63,8 @@ export class Todos implements ITodos {
     input: TodoDeleteInput,
     output: TodoDeleteOutput
   ): Promise<void> {
-    await this.store.delete(input.getId());
-    output.success();
+    const todoId: string = input.getId();
+    await this.store.delete(todoId);
+    output.success(todoId);
   }
 }
