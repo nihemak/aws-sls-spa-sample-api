@@ -18,6 +18,8 @@ services:
       TZ: 'Asia/Tokyo'
     volumes:
       - ../:/src/
+    networks:
+      - backend
     depends_on:
       - dynamodb
   dynamodb:
@@ -26,3 +28,8 @@ services:
       - 8000:8000
     volumes:
       - ./dynamodb/db:/var/lib/dynamodb
+    networks:
+      - backend
+networks:
+  backend:
+    driver: bridge
