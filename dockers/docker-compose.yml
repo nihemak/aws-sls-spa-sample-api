@@ -16,6 +16,7 @@ services:
       DYNAMO_PREFIX: 'local'
       CORS: '*'
       TZ: 'Asia/Tokyo'
+      USER_POOL_ID: 'xxxxx'
     volumes:
       - ../:/src/
     networks:

@@ -20,6 +20,8 @@ provider:
     name: ${env:DEPLOY_BUCKET}
 
 functions:
+  authorizer:
+    handler: app/http/controllers/auth.authorize
   create:
     handler: app/http/controllers/todos.create
     events:
@@ -27,6 +29,7 @@ functions:
           path: v1/todos
           method: post
           cors: true
+          authorizer: authorizer
   list:
     handler: app/http/controllers/todos.list
     events:
@@ -34,6 +37,7 @@ functions:
           path: v1/todos
           method: get
           cors: true
+          authorizer: authorizer
   get:
     handler: app/http/controllers/todos.get
     events:
@@ -41,6 +45,7 @@ functions:
           path: v1/todos/{id}
           method: get
           cors: true
+          authorizer: authorizer
   update:
     handler: app/http/controllers/todos.update
     events:
@@ -48,6 +53,7 @@ functions:
           path: v1/todos/{id}
           method: put
           cors: true
+          authorizer: authorizer
   delete:
     handler: app/http/controllers/todos.destroy
     events:
@@ -55,3 +61,4 @@ functions:
           path: v1/todos/{id}
           method: delete
           cors: true
+          authorizer: authorizer
