@@ -28,9 +28,9 @@ const generatePolicy = (principalId: any, effect: any, resource: any) => {
 export function authorize(event: any, _context: any, cb: any) {
   console.log("Auth function invoked");
 
-  if (userPoolId === 'Dummy') {
+  if (userPoolId === "Dummy") {
     console.log("Auth function dummy mode");
-    cb(null, generatePolicy('dummySub', "Allow", event.methodArn));
+    cb(null, generatePolicy("dummySub", "Allow", event.methodArn));
     return;
   }
 
