@@ -12,8 +12,8 @@ export class Todos implements ITodos {
     this.table = new TodoTable();
   }
 
-  public async create(text: string): Promise<Todo> {
-    const todo: TodoRecord = await this.table.create(text);
+  public async create(userId: string, text: string): Promise<Todo> {
+    const todo: TodoRecord = await this.table.create(userId, text);
     return this.recordToEntitiy(todo);
   }
 

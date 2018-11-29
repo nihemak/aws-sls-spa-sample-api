@@ -30,7 +30,10 @@ export class Todos implements ITodos {
     input: TodoCreateInput,
     output: TodoCreateOutput
   ): Promise<void> {
-    const todo: Todo = await this.store.create(input.getText());
+    const todo: Todo = await this.store.create(
+      input.getAuthUserId(),
+      input.getText()
+    );
     output.success(todo);
   }
 

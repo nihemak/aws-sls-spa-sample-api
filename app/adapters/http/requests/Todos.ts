@@ -4,16 +4,35 @@ import {
   TodoUpdateInput as ITodoUpdateInput,
   TodoDeleteInput as ITodoDeleteInput
 } from "app/usecases/inputs/Todos";
+import jwk from "jsonwebtoken";
 
 export class TodoCreateInput implements ITodoCreateInput {
+  private userId: string;
   private text: string;
 
-  public constructor(eventBody: { [field: string]: any }) {
+  public constructor(
+    headers: { [name: string]: string },
+    eventBody: { [field: string]: any }
+  ) {
+    this.userId = this._getAuthUserId(headers);
     this.text = eventBody.text;
+  }
+
+  public getAuthUserId(): string {
+    return this.userId;
   }
 
   public getText(): string {
     return this.text;
+  }
+
+  private _getAuthUserId(headers: { [name: string]: string }): string {
+    let userId = headers["Authorization"];
+    if (process.env.USER_POOL_ID !== "Dummy") {
+      const decodedJwt: any = jwk.decode(userId, { complete: true });
+      userId = decodedJwt.payload.sub;
+    }
+    return userId;
   }
 }
 

@@ -22,6 +22,7 @@ import { UseCaseStoreTodosMock } from "test/utils/UseCaseStoreTodosMock";
 describe("usecases/Todos/implementations", () => {
   describe("#create", () => {
     it("should create todo.", async () => {
+      const userId: string = "user";
       const storeTodo: Todo = {
         id: "b24bd9b3-9517-4c43-9d7e-858969ea9483",
         text: "foo",
@@ -30,7 +31,11 @@ describe("usecases/Todos/implementations", () => {
         updatedAt: 1536101150362
       };
 
-      UseCaseStoreTodosMock.create = (text: string): Promise<Todo> => {
+      UseCaseStoreTodosMock.create = (
+        userId: string,
+        text: string
+      ): Promise<Todo> => {
+        expect(userId).to.equal(userId);
         expect(text).to.equal(storeTodo.text);
 
         return Promise.resolve(storeTodo);
@@ -38,6 +43,9 @@ describe("usecases/Todos/implementations", () => {
       container.rebind<TodoStore>(TYPES.STORE_TODOS).to(UseCaseStoreTodosMock);
 
       const input = new class implements TodoCreateInput {
+        public getAuthUserId(): string {
+          return userId;
+        }
         public getText(): string {
           return storeTodo.text;
         }

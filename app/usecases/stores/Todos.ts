@@ -1,7 +1,7 @@
 import { Todo } from "app/entities/Todo";
 
 export interface Todos {
-  create(text: string): Promise<Todo>;
+  create(userId: string, text: string): Promise<Todo>;
   all(): Promise<Todo[]>;
   get(id: string): Promise<Todo | {}>;
   update(

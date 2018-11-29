@@ -4,11 +4,11 @@ import { Todo } from "app/entities/Todo";
 
 @injectable()
 export class UseCaseStoreTodosMock implements Todos {
-  public static create = (_text: string): Promise<Todo> => {
+  public static create = (_userId: string, _text: string): Promise<Todo> => {
     return Promise.reject();
   };
-  public create(text: string): Promise<Todo> {
-    return UseCaseStoreTodosMock.create(text);
+  public create(userId: string, text: string): Promise<Todo> {
+    return UseCaseStoreTodosMock.create(userId, text);
   }
 
   public static all = (): Promise<Todo[]> => {

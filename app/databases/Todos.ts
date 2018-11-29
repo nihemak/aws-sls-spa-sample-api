@@ -43,7 +43,7 @@ export class TodoRecord {
 }
 
 export class Todos {
-  public async create(text: string): Promise<TodoRecord> {
+  public async create(_userId: string, text: string): Promise<TodoRecord> {
     const toSave = Object.assign(new TodoRecord(), { text: text });
     const objectSaved = await mapper.put(toSave);
     console.log("created todo in DynamoDB", objectSaved.text);

@@ -17,23 +17,15 @@ import {
   TodoUpdateOutput,
   TodoDeleteOutput
 } from "app/adapters/http/responses/Todos";
-import jwk from "jsonwebtoken";
-
-function getAuthUserId(headers: { [name: string]: string }): string {
-  let userId = headers["Authorization"];
-  if (process.env.USER_POOL_ID !== "Dummy") {
-    const decodedJwt: any = jwk.decode(userId, { complete: true });
-    userId = decodedJwt.payload.sub;
-  }
-  console.log(userId);
-  return userId;
-}
 
 export const create: middy.IMiddy = applyCommonMiddlewares(
   middy(async (event: APIGatewayEvent, _: Context, cb: Callback) => {
     await container
       .get<UseCase>(TYPES.USECASE_TODOS)
-      .create(new TodoCreateInput(event.body as any), new TodoCreateOutput(cb));
+      .create(
+        new TodoCreateInput(event.headers, event.body as any),
+        new TodoCreateOutput(cb)
+      );
   })
 ).use(
   requestValidator({
@@ -43,9 +35,6 @@ export const create: middy.IMiddy = applyCommonMiddlewares(
 
 export const list: middy.IMiddy = applyCommonMiddlewares(
   middy(async (_event: APIGatewayEvent, _: Context, cb: Callback) => {
-    const userId = getAuthUserId(_event.headers);
-    console.log(userId);
-
     await container
       .get<UseCase>(TYPES.USECASE_TODOS)
       .list(new TodoListOutput(cb));
