@@ -6,6 +6,7 @@ import { container, TYPES } from "app/providers/container";
 import { Todos as TodosUseCase } from "app/usecases/Todos";
 import {
   TodoCreateInput,
+  TodoListInput,
   TodoShowInput,
   TodoUpdateInput,
   TodoDeleteInput
@@ -89,10 +90,14 @@ describe("http/controllers/todos", () => {
       });
 
       const event = {
+        headers: {},
         httpMethod: "GET"
       };
 
-      UseCaseTodosMock.list = (output: TodoListOutput): Promise<void> => {
+      UseCaseTodosMock.list = (
+        _input: TodoListInput,
+        output: TodoListOutput
+      ): Promise<void> => {
         output.success(todos);
         return Promise.resolve();
       };
@@ -129,6 +134,7 @@ describe("http/controllers/todos", () => {
       };
 
       const event = {
+        headers: {},
         httpMethod: "GET",
         pathParameters: {
           id: todo.id
@@ -223,6 +229,7 @@ describe("http/controllers/todos", () => {
       };
 
       const event = {
+        headers: {},
         httpMethod: "DELETE",
         pathParameters: {
           id: todo.id

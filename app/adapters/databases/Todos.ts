@@ -17,15 +17,15 @@ export class Todos implements ITodos {
     return this.recordToEntitiy(todo);
   }
 
-  public async all(): Promise<Todo[]> {
-    const todos: TodoRecord[] = await this.table.all();
+  public async all(userId: string): Promise<Todo[]> {
+    const todos: TodoRecord[] = await this.table.all(userId);
     return todos.map(todo => {
       return this.recordToEntitiy(todo);
     });
   }
 
-  public async get(id: string): Promise<Todo | {}> {
-    const todo: TodoRecord | {} = await this.table.get(id);
+  public async get(userId: string, id: string): Promise<Todo | {}> {
+    const todo: TodoRecord | {} = await this.table.get(userId, id);
     if (!todo) {
       return {};
     } else {
@@ -34,16 +34,17 @@ export class Todos implements ITodos {
   }
 
   public async update(
+    userId: string,
     id: string,
     text: string,
     checked: boolean
   ): Promise<Todo> {
-    const todo: TodoRecord = await this.table.update(id, text, checked);
+    const todo: TodoRecord = await this.table.update(userId, id, text, checked);
     return this.recordToEntitiy(todo);
   }
 
-  public async delete(id: string): Promise<void> {
-    return this.table.delete(id);
+  public async delete(userId: string, id: string): Promise<void> {
+    return this.table.delete(userId, id);
   }
 
   public async createTable(rc: number, wc: number): Promise<void> {

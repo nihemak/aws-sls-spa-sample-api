@@ -6,6 +6,7 @@ import { container, TYPES } from "app/providers/container";
 import { Todos as UseCase } from "app/usecases/Todos";
 import {
   TodoCreateInput,
+  TodoListInput,
   TodoShowInput,
   TodoUpdateInput,
   TodoDeleteInput
@@ -34,10 +35,10 @@ export const create: middy.IMiddy = applyCommonMiddlewares(
 );
 
 export const list: middy.IMiddy = applyCommonMiddlewares(
-  middy(async (_event: APIGatewayEvent, _: Context, cb: Callback) => {
+  middy(async (event: APIGatewayEvent, _: Context, cb: Callback) => {
     await container
       .get<UseCase>(TYPES.USECASE_TODOS)
-      .list(new TodoListOutput(cb));
+      .list(new TodoListInput(event.headers), new TodoListOutput(cb));
   })
 );
 
@@ -46,7 +47,7 @@ export const get: middy.IMiddy = applyCommonMiddlewares(
     await container
       .get<UseCase>(TYPES.USECASE_TODOS)
       .show(
-        new TodoShowInput(event.pathParameters as any),
+        new TodoShowInput(event.headers, event.pathParameters as any),
         new TodoShowOutput(cb)
       );
   })
@@ -61,7 +62,11 @@ export const update: middy.IMiddy = applyCommonMiddlewares(
     await container
       .get<UseCase>(TYPES.USECASE_TODOS)
       .update(
-        new TodoUpdateInput(event.pathParameters as any, event.body as any),
+        new TodoUpdateInput(
+          event.headers,
+          event.pathParameters as any,
+          event.body as any
+        ),
         new TodoUpdateOutput(cb)
       );
   })
@@ -78,7 +83,7 @@ export const destroy: middy.IMiddy = applyCommonMiddlewares(
     await container
       .get<UseCase>(TYPES.USECASE_TODOS)
       .delete(
-        new TodoDeleteInput(event.pathParameters as any),
+        new TodoDeleteInput(event.headers, event.pathParameters as any),
         new TodoDeleteOutput(cb)
       );
   })

@@ -50,7 +50,7 @@ export class Todos {
     return objectSaved;
   }
 
-  public async all(): Promise<TodoRecord[]> {
+  public async all(_userId: string): Promise<TodoRecord[]> {
     const iterator = mapper.scan(TodoRecord);
     const todos: TodoRecord[] = [];
     // tslint:disable-next-line
@@ -60,7 +60,7 @@ export class Todos {
     return todos;
   }
 
-  public async get(id: string): Promise<TodoRecord | {}> {
+  public async get(_userId: string, id: string): Promise<TodoRecord | {}> {
     const myItem = await mapper.get(
       Object.assign(new TodoRecord(), { id: id })
     );
@@ -68,6 +68,7 @@ export class Todos {
   }
 
   public async update(
+    _userId: string,
     id: string,
     text: string | undefined,
     checked: boolean | undefined
@@ -86,7 +87,7 @@ export class Todos {
     return objectSaved;
   }
 
-  public async delete(id: string): Promise<void> {
+  public async delete(_userId: string, id: string): Promise<void> {
     await mapper.delete(Object.assign(new TodoRecord(), { id: id }));
   }
 

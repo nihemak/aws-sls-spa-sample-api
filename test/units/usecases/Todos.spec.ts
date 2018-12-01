@@ -6,6 +6,7 @@ import { Todo } from "app/entities/Todo";
 import { Todos as UseCase } from "app/usecases/Todos";
 import {
   TodoCreateInput,
+  TodoListInput,
   TodoShowInput,
   TodoUpdateInput,
   TodoDeleteInput
@@ -61,6 +62,7 @@ describe("usecases/Todos/implementations", () => {
 
   describe("#list", () => {
     it("should list todos.", async () => {
+      const userId: string = "user";
       const storeTodos: Todo[] = [];
       storeTodos.push({
         text: "foo",
@@ -77,22 +79,30 @@ describe("usecases/Todos/implementations", () => {
         updatedAt: 1536199199360
       });
 
-      UseCaseStoreTodosMock.all = (): Promise<Todo[]> => {
+      UseCaseStoreTodosMock.all = (userId: string): Promise<Todo[]> => {
+        expect(userId).to.equal(userId);
+
         return Promise.resolve(storeTodos);
       };
       container.rebind<TodoStore>(TYPES.STORE_TODOS).to(UseCaseStoreTodosMock);
 
+      const input = new class implements TodoListInput {
+        public getAuthUserId(): string {
+          return userId;
+        }
+      }();
       const output = new class implements TodoListOutput {
         public success(todos: Todo[]): void {
           expect(todos).to.equal(storeTodos);
         }
       }();
-      await container.get<UseCase>(TYPES.USECASE_TODOS).list(output);
+      await container.get<UseCase>(TYPES.USECASE_TODOS).list(input, output);
     });
   });
 
   describe("#show", () => {
     it("should show todo.", async () => {
+      const userId: string = "user";
       const storeTodo: Todo = {
         text: "foo",
         id: "FD46591-5827-4678-BC5E-15C02B48BD4B",
@@ -101,7 +111,11 @@ describe("usecases/Todos/implementations", () => {
         updatedAt: 1536101199360
       };
 
-      UseCaseStoreTodosMock.get = (id: string): Promise<Todo | {}> => {
+      UseCaseStoreTodosMock.get = (
+        userId: string,
+        id: string
+      ): Promise<Todo | {}> => {
+        expect(userId).to.equal(userId);
         expect(id).to.equal(storeTodo.id);
 
         return Promise.resolve(storeTodo);
@@ -109,6 +123,9 @@ describe("usecases/Todos/implementations", () => {
       container.rebind<TodoStore>(TYPES.STORE_TODOS).to(UseCaseStoreTodosMock);
 
       const input = new class implements TodoShowInput {
+        public getAuthUserId(): string {
+          return userId;
+        }
         public getId(): string {
           return storeTodo.id;
         }
@@ -124,6 +141,7 @@ describe("usecases/Todos/implementations", () => {
 
   describe("#update", () => {
     it("should update todo.", async () => {
+      const userId: string = "user";
       const storeTodo: Todo = {
         text: "foo",
         id: "FD46591-5827-4678-BC5E-15C02B48BD4B",
@@ -133,10 +151,12 @@ describe("usecases/Todos/implementations", () => {
       };
 
       UseCaseStoreTodosMock.update = (
+        userId: string,
         id: string,
         text: string,
         checked: boolean
       ): Promise<Todo> => {
+        expect(userId).to.equal(userId);
         expect(id).to.equal(storeTodo.id);
         expect(text).to.equal(storeTodo.text);
         expect(checked).to.equal(storeTodo.checked);
@@ -146,6 +166,9 @@ describe("usecases/Todos/implementations", () => {
       container.rebind<TodoStore>(TYPES.STORE_TODOS).to(UseCaseStoreTodosMock);
 
       const input = new class implements TodoUpdateInput {
+        public getAuthUserId(): string {
+          return userId;
+        }
         public getId(): string {
           return storeTodo.id;
         }
@@ -167,11 +190,16 @@ describe("usecases/Todos/implementations", () => {
 
   describe("#delete", () => {
     it("should delete todo.", async () => {
+      const userId: string = "user";
       const storeTodo = {
         id: "FD46591-5827-4678-BC5E-15C02B48BD4B"
       };
 
-      UseCaseStoreTodosMock.delete = (id: string): Promise<void> => {
+      UseCaseStoreTodosMock.delete = (
+        userId: string,
+        id: string
+      ): Promise<void> => {
+        expect(userId).to.equal(userId);
         expect(id).to.equal(storeTodo.id);
 
         return Promise.resolve();
@@ -179,6 +207,9 @@ describe("usecases/Todos/implementations", () => {
       container.rebind<TodoStore>(TYPES.STORE_TODOS).to(UseCaseStoreTodosMock);
 
       const input = new class implements TodoDeleteInput {
+        public getAuthUserId(): string {
+          return userId;
+        }
         public getId(): string {
           return storeTodo.id;
         }

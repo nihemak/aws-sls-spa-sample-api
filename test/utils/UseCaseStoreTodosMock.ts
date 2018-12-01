@@ -11,36 +11,42 @@ export class UseCaseStoreTodosMock implements Todos {
     return UseCaseStoreTodosMock.create(userId, text);
   }
 
-  public static all = (): Promise<Todo[]> => {
+  public static all = (_userId: string): Promise<Todo[]> => {
     return Promise.reject();
   };
-  public all(): Promise<Todo[]> {
-    return UseCaseStoreTodosMock.all();
+  public all(userId: string): Promise<Todo[]> {
+    return UseCaseStoreTodosMock.all(userId);
   }
 
-  public static get = (_id: string): Promise<Todo | {}> => {
+  public static get = (_userId: string, _id: string): Promise<Todo | {}> => {
     return Promise.reject();
   };
-  public get(id: string): Promise<Todo | {}> {
-    return UseCaseStoreTodosMock.get(id);
+  public get(userId: string, id: string): Promise<Todo | {}> {
+    return UseCaseStoreTodosMock.get(userId, id);
   }
 
   public static update = (
+    _userId: string,
     _id: string,
     _text: string,
     _checked: boolean
   ): Promise<Todo> => {
     return Promise.reject();
   };
-  public update(id: string, text: string, checked: boolean): Promise<Todo> {
-    return UseCaseStoreTodosMock.update(id, text, checked);
+  public update(
+    userId: string,
+    id: string,
+    text: string,
+    checked: boolean
+  ): Promise<Todo> {
+    return UseCaseStoreTodosMock.update(userId, id, text, checked);
   }
 
-  public static delete = (_id: string): Promise<void> => {
+  public static delete = (_userId: string, _id: string): Promise<void> => {
     return Promise.reject();
   };
-  public delete(id: string): Promise<void> {
-    return UseCaseStoreTodosMock.delete(id);
+  public delete(userId: string, id: string): Promise<void> {
+    return UseCaseStoreTodosMock.delete(userId, id);
   }
 
   public static createTable = (_rc: number, _wc: number): Promise<void> => {

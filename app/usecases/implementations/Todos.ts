@@ -6,6 +6,7 @@ import { Todos as TodoStore } from "app/usecases/stores/Todos";
 import { Todos as ITodos } from "app/usecases/Todos";
 import {
   TodoCreateInput,
+  TodoListInput,
   TodoShowInput,
   TodoUpdateInput,
   TodoDeleteInput
@@ -37,8 +38,11 @@ export class Todos implements ITodos {
     output.success(todo);
   }
 
-  public async list(output: TodoListOutput): Promise<void> {
-    const todos: Todo[] = await this.store.all();
+  public async list(
+    input: TodoListInput,
+    output: TodoListOutput
+  ): Promise<void> {
+    const todos: Todo[] = await this.store.all(input.getAuthUserId());
     output.success(todos);
   }
 
@@ -46,7 +50,10 @@ export class Todos implements ITodos {
     input: TodoShowInput,
     output: TodoShowOutput
   ): Promise<void> {
-    const todo: Todo | {} = await this.store.get(input.getId());
+    const todo: Todo | {} = await this.store.get(
+      input.getAuthUserId(),
+      input.getId()
+    );
     output.success(todo);
   }
 
@@ -55,6 +62,7 @@ export class Todos implements ITodos {
     output: TodoUpdateOutput
   ): Promise<void> {
     const todo: Todo = await this.store.update(
+      input.getAuthUserId(),
       input.getId(),
       input.getText(),
       input.getChecked()
@@ -67,7 +75,7 @@ export class Todos implements ITodos {
     output: TodoDeleteOutput
   ): Promise<void> {
     const todoId: string = input.getId();
-    await this.store.delete(todoId);
+    await this.store.delete(input.getAuthUserId(), todoId);
     output.success(todoId);
   }
 }
