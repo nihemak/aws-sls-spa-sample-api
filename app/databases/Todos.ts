@@ -30,6 +30,9 @@ export class TodoRecord {
   id!: string;
 
   @attribute()
+  userId!: string;
+
+  @attribute()
   text!: string;
 
   @attribute({ defaultProvider: () => false })
@@ -43,8 +46,8 @@ export class TodoRecord {
 }
 
 export class Todos {
-  public async create(_userId: string, text: string): Promise<TodoRecord> {
-    const toSave = Object.assign(new TodoRecord(), { text: text });
+  public async create(userId: string, text: string): Promise<TodoRecord> {
+    const toSave = Object.assign(new TodoRecord(), { userId: userId, text: text });
     const objectSaved = await mapper.put(toSave);
     console.log("created todo in DynamoDB", objectSaved.text);
     return objectSaved;
