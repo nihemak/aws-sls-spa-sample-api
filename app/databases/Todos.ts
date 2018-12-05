@@ -19,9 +19,12 @@ if (process.env.IS_OFFLINE) {
     region: process.env.REGION
   };
 }
+const dynamodb = new DynamoDB(options);
+const prefix = `${process.env.DYNAMO_PREFIX}-`;
+const tableName = `${prefix}todos`;
 const mapper = new DataMapper({
-  client: new DynamoDB(options),
-  tableNamePrefix: `${process.env.DYNAMO_PREFIX}-`
+  client: dynamodb,
+  tableNamePrefix: prefix
 });
 
 @table("todos")
@@ -47,7 +50,10 @@ export class TodoRecord {
 
 export class Todos {
   public async create(userId: string, text: string): Promise<TodoRecord> {
-    const toSave = Object.assign(new TodoRecord(), { userId: userId, text: text });
+    const toSave = Object.assign(new TodoRecord(), {
+      serId: userId,
+      text: text
+    });
     const objectSaved = await mapper.put(toSave);
     console.log("created todo in DynamoDB", objectSaved.text);
     return objectSaved;
@@ -98,6 +104,48 @@ export class Todos {
     await mapper.createTable(TodoRecord, {
       readCapacityUnits: rc,
       writeCapacityUnits: wc
+    });
+    const params = {
+      AttributeDefinitions: [
+        {
+          AttributeName: "userId",
+          AttributeType: "S"
+        },
+        {
+          AttributeName: "createdAt",
+          AttributeType: "N"
+        }
+      ],
+      GlobalSecondaryIndexUpdates: [
+        {
+          Create: {
+            IndexName: "userIdIdx",
+            KeySchema: [
+              {
+                AttributeName: "userId",
+                KeyType: "HASH"
+              },
+              {
+                AttributeName: "createdAt",
+                KeyType: "RANGE"
+              }
+            ],
+            Projection: {
+              ProjectionType: "ALL"
+            },
+            ProvisionedThroughput: {
+              ReadCapacityUnits: 1,
+              WriteCapacityUnits: 1
+            }
+          }
+        }
+      ],
+      TableName: tableName
+    };
+    dynamodb.updateTable(params, function(err) {
+      if (err) {
+        throw err;
+      }
     });
   }
 
