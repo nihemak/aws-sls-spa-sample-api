@@ -51,7 +51,7 @@ export class TodoRecord {
 export class Todos {
   public async create(userId: string, text: string): Promise<TodoRecord> {
     const toSave = Object.assign(new TodoRecord(), {
-      serId: userId,
+      userId: userId,
       text: text
     });
     const objectSaved = await mapper.put(toSave);
