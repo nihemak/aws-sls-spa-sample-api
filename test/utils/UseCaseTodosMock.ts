@@ -2,6 +2,7 @@ import { injectable } from "inversify";
 import { Todos } from "app/usecases/Todos";
 import {
   TodoCreateInput,
+  TodoListInput,
   TodoShowInput,
   TodoUpdateInput,
   TodoDeleteInput
@@ -29,11 +30,14 @@ export class UseCaseTodosMock implements Todos {
     return UseCaseTodosMock.create(input, output);
   }
 
-  public static list = (_output: TodoListOutput): Promise<void> => {
+  public static list = (
+    _input: TodoListInput,
+    _output: TodoListOutput
+  ): Promise<void> => {
     return Promise.reject();
   };
-  public list(output: TodoListOutput): Promise<void> {
-    return UseCaseTodosMock.list(output);
+  public list(input: TodoListInput, output: TodoListOutput): Promise<void> {
+    return UseCaseTodosMock.list(input, output);
   }
 
   public static show = (

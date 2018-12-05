@@ -1,5 +1,6 @@
 import {
   TodoCreateInput,
+  TodoListInput,
   TodoShowInput,
   TodoUpdateInput,
   TodoDeleteInput
@@ -14,7 +15,7 @@ import {
 
 export interface Todos {
   create(input: TodoCreateInput, output: TodoCreateOutput): Promise<void>;
-  list(output: TodoListOutput): Promise<void>;
+  list(input: TodoListInput, output: TodoListOutput): Promise<void>;
   show(input: TodoShowInput, output: TodoShowOutput): Promise<void>;
   update(input: TodoUpdateInput, output: TodoUpdateOutput): Promise<void>;
   delete(input: TodoDeleteInput, output: TodoDeleteOutput): Promise<void>;

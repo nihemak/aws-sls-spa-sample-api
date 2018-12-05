@@ -12,13 +12,13 @@ export class Todos implements ITodos {
     this.table = new TodoTable();
   }
 
-  public async create(text: string): Promise<Todo> {
-    const todo: TodoRecord = await this.table.create(text);
+  public async create(userId: string, text: string): Promise<Todo> {
+    const todo: TodoRecord = await this.table.create(userId, text);
     return this.recordToEntitiy(todo);
   }
 
-  public async all(): Promise<Todo[]> {
-    const todos: TodoRecord[] = await this.table.all();
+  public async all(userId: string): Promise<Todo[]> {
+    const todos: TodoRecord[] = await this.table.listByUserId(userId);
     return todos.map(todo => {
       return this.recordToEntitiy(todo);
     });
@@ -57,6 +57,7 @@ export class Todos implements ITodos {
   private recordToEntitiy(record: TodoRecord): Todo {
     return {
       id: record.id,
+      userId: record.userId,
       text: record.text,
       checked: record.checked,
       createdAt: record.createdAt,

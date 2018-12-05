@@ -6,6 +6,7 @@ import { Todos as TodoStore } from "app/usecases/stores/Todos";
 import { Todos as ITodos } from "app/usecases/Todos";
 import {
   TodoCreateInput,
+  TodoListInput,
   TodoShowInput,
   TodoUpdateInput,
   TodoDeleteInput
@@ -30,12 +31,18 @@ export class Todos implements ITodos {
     input: TodoCreateInput,
     output: TodoCreateOutput
   ): Promise<void> {
-    const todo: Todo = await this.store.create(input.getText());
+    const todo: Todo = await this.store.create(
+      input.getAuthUserId(),
+      input.getText()
+    );
     output.success(todo);
   }
 
-  public async list(output: TodoListOutput): Promise<void> {
-    const todos: Todo[] = await this.store.all();
+  public async list(
+    input: TodoListInput,
+    output: TodoListOutput
+  ): Promise<void> {
+    const todos: Todo[] = await this.store.all(input.getAuthUserId());
     output.success(todos);
   }
 
@@ -43,7 +50,10 @@ export class Todos implements ITodos {
     input: TodoShowInput,
     output: TodoShowOutput
   ): Promise<void> {
-    const todo: Todo | {} = await this.store.get(input.getId());
+    let todo: Todo | {} = await this.store.get(input.getId());
+    if (todo && (todo as Todo).userId !== input.getAuthUserId()) {
+      todo = {};
+    }
     output.success(todo);
   }
 
@@ -51,12 +61,15 @@ export class Todos implements ITodos {
     input: TodoUpdateInput,
     output: TodoUpdateOutput
   ): Promise<void> {
-    const todo: Todo = await this.store.update(
-      input.getId(),
-      input.getText(),
-      input.getChecked()
-    );
-    output.success(todo);
+    const todo: Todo | {} = await this.store.get(input.getId());
+    if (todo && (todo as Todo).userId === input.getAuthUserId()) {
+      const todo: Todo = await this.store.update(
+        input.getId(),
+        input.getText(),
+        input.getChecked()
+      );
+      output.success(todo);
+    }
   }
 
   public async delete(
@@ -64,7 +77,10 @@ export class Todos implements ITodos {
     output: TodoDeleteOutput
   ): Promise<void> {
     const todoId: string = input.getId();
-    await this.store.delete(todoId);
+    const todo: Todo | {} = await this.store.get(todoId);
+    if (todo && (todo as Todo).userId === input.getAuthUserId()) {
+      await this.store.delete(todoId);
+    }
     output.success(todoId);
   }
 }
