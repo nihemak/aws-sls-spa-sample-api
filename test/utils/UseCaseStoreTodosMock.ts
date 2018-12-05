@@ -18,35 +18,29 @@ export class UseCaseStoreTodosMock implements Todos {
     return UseCaseStoreTodosMock.all(userId);
   }
 
-  public static get = (_userId: string, _id: string): Promise<Todo | {}> => {
+  public static get = (_id: string): Promise<Todo | {}> => {
     return Promise.reject();
   };
-  public get(userId: string, id: string): Promise<Todo | {}> {
-    return UseCaseStoreTodosMock.get(userId, id);
+  public get(id: string): Promise<Todo | {}> {
+    return UseCaseStoreTodosMock.get(id);
   }
 
   public static update = (
-    _userId: string,
     _id: string,
     _text: string,
     _checked: boolean
   ): Promise<Todo> => {
     return Promise.reject();
   };
-  public update(
-    userId: string,
-    id: string,
-    text: string,
-    checked: boolean
-  ): Promise<Todo> {
-    return UseCaseStoreTodosMock.update(userId, id, text, checked);
+  public update(id: string, text: string, checked: boolean): Promise<Todo> {
+    return UseCaseStoreTodosMock.update(id, text, checked);
   }
 
-  public static delete = (_userId: string, _id: string): Promise<void> => {
+  public static delete = (_id: string): Promise<void> => {
     return Promise.reject();
   };
-  public delete(userId: string, id: string): Promise<void> {
-    return UseCaseStoreTodosMock.delete(userId, id);
+  public delete(id: string): Promise<void> {
+    return UseCaseStoreTodosMock.delete(id);
   }
 
   public static createTable = (_rc: number, _wc: number): Promise<void> => {

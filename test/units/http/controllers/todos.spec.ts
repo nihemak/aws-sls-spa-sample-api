@@ -19,17 +19,26 @@ import {
   TodoDeleteOutput
 } from "app/usecases/outputs/Todos";
 import { UseCaseTodosMock } from "test/utils/UseCaseTodosMock";
-import { Todo } from "app/entities/Todo";
+import { Todo as TodoEntity } from "app/entities/Todo";
+import { Todo as TodoModel } from "app/http/models/Todo";
 
 describe("http/controllers/todos", () => {
   describe("#create", () => {
     it("should success response when success handler.", done => {
-      const todo: Todo = {
+      const todo: TodoEntity = {
         id: "b24bd9b3-9517-4c43-9d7e-858969ea9483",
+        userId: "user",
         text: "foo",
         checked: false,
         createdAt: 1536101150360,
         updatedAt: 1536101150362
+      };
+      const todoModel: TodoModel = {
+        id: todo.id,
+        text: todo.text,
+        checked: todo.checked,
+        createdAt: todo.createdAt,
+        updatedAt: todo.updatedAt
       };
 
       const event = {
@@ -64,7 +73,7 @@ describe("http/controllers/todos", () => {
         });
 
         const body = JSON.parse(response.body);
-        expect(body).to.deep.equal(todo);
+        expect(body).to.deep.equal(todoModel);
 
         done();
       });
@@ -73,10 +82,11 @@ describe("http/controllers/todos", () => {
 
   describe("#list", () => {
     it("should success response when success handler.", done => {
-      const todos: Todo[] = [];
+      const todos: TodoEntity[] = [];
       todos.push({
         text: "foo",
         id: "FD46591-5827-4678-BC5E-15C02B48BD4B",
+        userId: "user",
         checked: true,
         createdAt: 1536101188360,
         updatedAt: 1536101199360
@@ -84,9 +94,20 @@ describe("http/controllers/todos", () => {
       todos.push({
         text: "bar",
         id: "88D85019-AC42-408A-95FC-910E13CE79D8",
+        userId: "user",
         checked: false,
         createdAt: 1536101177360,
         updatedAt: 1536199199360
+      });
+      const todoModels: TodoModel[] = [];
+      todos.forEach(todo => {
+        todoModels.push({
+          text: todo.text,
+          id: todo.id,
+          checked: todo.checked,
+          createdAt: todo.createdAt,
+          updatedAt: todo.updatedAt
+        });
       });
 
       const event = {
@@ -116,7 +137,7 @@ describe("http/controllers/todos", () => {
         });
 
         const body = JSON.parse(response.body);
-        expect(body).to.deep.equal(todos);
+        expect(body).to.deep.equal(todoModels);
 
         done();
       });
@@ -125,12 +146,20 @@ describe("http/controllers/todos", () => {
 
   describe("#get", () => {
     it("should success response when success handler.", done => {
-      const todo: Todo = {
+      const todo: TodoEntity = {
         text: "foo",
         id: "FD46591-5827-4678-BC5E-15C02B48BD4B",
+        userId: "user",
         checked: true,
         createdAt: 1536101188360,
         updatedAt: 1536101199360
+      };
+      const todoModel: TodoModel = {
+        id: todo.id,
+        text: todo.text,
+        checked: todo.checked,
+        createdAt: todo.createdAt,
+        updatedAt: todo.updatedAt
       };
 
       const event = {
@@ -165,7 +194,7 @@ describe("http/controllers/todos", () => {
         });
 
         const body = JSON.parse(response.body);
-        expect(body).to.deep.equal(todo);
+        expect(body).to.deep.equal(todoModel);
 
         done();
       });
@@ -174,12 +203,20 @@ describe("http/controllers/todos", () => {
 
   describe("#update", () => {
     it("should success response when success handler.", done => {
-      const todo: Todo = {
+      const todo: TodoEntity = {
         text: "foo",
+        userId: "user",
         id: "FD46591-5827-4678-BC5E-15C02B48BD4B",
         checked: true,
         createdAt: 1536101188360,
         updatedAt: 1536101199360
+      };
+      const todoModel: TodoModel = {
+        id: todo.id,
+        text: todo.text,
+        checked: todo.checked,
+        createdAt: todo.createdAt,
+        updatedAt: todo.updatedAt
       };
 
       const event = {
@@ -215,7 +252,7 @@ describe("http/controllers/todos", () => {
         expect(response.statusCode).to.equal(200);
 
         const body = JSON.parse(response.body);
-        expect(body).to.deep.equal(todo);
+        expect(body).to.deep.equal(todoModel);
 
         done();
       });

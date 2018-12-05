@@ -26,6 +26,7 @@ describe("usecases/Todos/implementations", () => {
       const userId: string = "user";
       const storeTodo: Todo = {
         id: "b24bd9b3-9517-4c43-9d7e-858969ea9483",
+        userId: userId,
         text: "foo",
         checked: false,
         createdAt: 1536101150360,
@@ -67,6 +68,7 @@ describe("usecases/Todos/implementations", () => {
       storeTodos.push({
         text: "foo",
         id: "FD46591-5827-4678-BC5E-15C02B48BD4B",
+        userId: userId,
         checked: true,
         createdAt: 1536101188360,
         updatedAt: 1536101199360
@@ -74,6 +76,7 @@ describe("usecases/Todos/implementations", () => {
       storeTodos.push({
         text: "bar",
         id: "88D85019-AC42-408A-95FC-910E13CE79D8",
+        userId: userId,
         checked: false,
         createdAt: 1536101177360,
         updatedAt: 1536199199360
@@ -106,16 +109,13 @@ describe("usecases/Todos/implementations", () => {
       const storeTodo: Todo = {
         text: "foo",
         id: "FD46591-5827-4678-BC5E-15C02B48BD4B",
+        userId: userId,
         checked: true,
         createdAt: 1536101188360,
         updatedAt: 1536101199360
       };
 
-      UseCaseStoreTodosMock.get = (
-        userId: string,
-        id: string
-      ): Promise<Todo | {}> => {
-        expect(userId).to.equal(userId);
+      UseCaseStoreTodosMock.get = (id: string): Promise<Todo | {}> => {
         expect(id).to.equal(storeTodo.id);
 
         return Promise.resolve(storeTodo);
@@ -145,18 +145,17 @@ describe("usecases/Todos/implementations", () => {
       const storeTodo: Todo = {
         text: "foo",
         id: "FD46591-5827-4678-BC5E-15C02B48BD4B",
+        userId: userId,
         checked: true,
         createdAt: 1536101188360,
         updatedAt: 1536101199360
       };
 
       UseCaseStoreTodosMock.update = (
-        userId: string,
         id: string,
         text: string,
         checked: boolean
       ): Promise<Todo> => {
-        expect(userId).to.equal(userId);
         expect(id).to.equal(storeTodo.id);
         expect(text).to.equal(storeTodo.text);
         expect(checked).to.equal(storeTodo.checked);
@@ -195,11 +194,7 @@ describe("usecases/Todos/implementations", () => {
         id: "FD46591-5827-4678-BC5E-15C02B48BD4B"
       };
 
-      UseCaseStoreTodosMock.delete = (
-        userId: string,
-        id: string
-      ): Promise<void> => {
-        expect(userId).to.equal(userId);
+      UseCaseStoreTodosMock.delete = (id: string): Promise<void> => {
         expect(id).to.equal(storeTodo.id);
 
         return Promise.resolve();
