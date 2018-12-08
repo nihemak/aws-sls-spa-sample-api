@@ -12,6 +12,7 @@ provider:
   region: ap-northeast-1
   stage: ${env:STAGE_ENV}
   environment:
+    REGION: ${env:REGION}
     DYNAMO_PREFIX : ${env:DYNAMO_PREFIX}
     CORS: ${env:CORS}
     TZ: ${env:TZ}
