@@ -1,4 +1,5 @@
 // https://github.com/serverless/examples/tree/master/aws-node-auth0-cognito-custom-authorizers-api
+// https://github.com/awslabs/aws-apigateway-lambda-authorizer-blueprints/blob/master/blueprints/nodejs/index.js
 import jwk from "jsonwebtoken";
 import request from "request";
 import jwkToPem from "jwk-to-pem";
@@ -8,21 +9,30 @@ const userPoolId = process.env.USER_POOL_ID;
 const iss = `https://cognito-idp.${region}.amazonaws.com/${userPoolId}`;
 
 // Generate policy to allow this user on this API:
-const generatePolicy = (principalId: any, effect: any, resource: any) => {
-  const authResponse: any = {};
-  authResponse.principalId = principalId;
-  if (effect && resource) {
-    const policyDocument: any = {};
-    policyDocument.Version = "2012-10-17";
-    policyDocument.Statement = [];
-    const statementOne: any = {};
-    statementOne.Action = "execute-api:Invoke";
-    statementOne.Effect = effect;
-    statementOne.Resource = resource;
-    policyDocument.Statement[0] = statementOne;
-    authResponse.policyDocument = policyDocument;
-  }
-  return authResponse;
+const generatePolicy = (principalId: any, resource: any) => {
+  const tmp = resource.split(":");
+  const apiGatewayArnTmp = tmp[5].split("/");
+  const awsAccountId = tmp[4];
+  const region = tmp[3];
+  const restApiId = apiGatewayArnTmp[0];
+  const stage = apiGatewayArnTmp[1];
+  const resourceArn = `arn:aws:execute-api:${region}:${awsAccountId}:${restApiId}/${stage}/*/*`;
+
+  const policy = {
+    principalId,
+    policyDocument: {
+      Version: "2012-10-17",
+      Statement: [
+        {
+          Action: "execute-api:Invoke",
+          Effect: "Allow",
+          Resource: [resourceArn]
+        }
+      ]
+    }
+  };
+
+  return policy;
 };
 
 export function authorize(event: any, _context: any, cb: any) {
@@ -30,7 +40,7 @@ export function authorize(event: any, _context: any, cb: any) {
 
   if (userPoolId === "Dummy") {
     console.log("Auth function dummy mode");
-    cb(null, generatePolicy("dummySub", "Allow", event.methodArn));
+    cb(null, generatePolicy("dummySub", event.methodArn));
     return;
   }
 
@@ -60,7 +70,7 @@ export function authorize(event: any, _context: any, cb: any) {
             console.log("Unauthorized user:", err.message);
             cb("Unauthorized");
           } else {
-            cb(null, generatePolicy(decoded.sub, "Allow", event.methodArn));
+            cb(null, generatePolicy(decoded.sub, event.methodArn));
           }
         });
       }
