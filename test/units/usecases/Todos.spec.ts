@@ -44,19 +44,19 @@ describe("usecases/Todos/implementations", () => {
       };
       container.rebind<TodoStore>(TYPES.STORE_TODOS).to(UseCaseStoreTodosMock);
 
-      const input = new class implements TodoCreateInput {
+      const input = new (class implements TodoCreateInput {
         public getAuthUserId(): string {
           return userId;
         }
         public getText(): string {
           return storeTodo.text;
         }
-      }();
-      const output = new class implements TodoCreateOutput {
+      })();
+      const output = new (class implements TodoCreateOutput {
         public success(todo: Todo): void {
           expect(todo).to.equal(storeTodo);
         }
-      }();
+      })();
       await container.get<UseCase>(TYPES.USECASE_TODOS).create(input, output);
     });
   });
@@ -89,16 +89,16 @@ describe("usecases/Todos/implementations", () => {
       };
       container.rebind<TodoStore>(TYPES.STORE_TODOS).to(UseCaseStoreTodosMock);
 
-      const input = new class implements TodoListInput {
+      const input = new (class implements TodoListInput {
         public getAuthUserId(): string {
           return userId;
         }
-      }();
-      const output = new class implements TodoListOutput {
+      })();
+      const output = new (class implements TodoListOutput {
         public success(todos: Todo[]): void {
           expect(todos).to.equal(storeTodos);
         }
-      }();
+      })();
       await container.get<UseCase>(TYPES.USECASE_TODOS).list(input, output);
     });
   });
@@ -122,19 +122,19 @@ describe("usecases/Todos/implementations", () => {
       };
       container.rebind<TodoStore>(TYPES.STORE_TODOS).to(UseCaseStoreTodosMock);
 
-      const input = new class implements TodoShowInput {
+      const input = new (class implements TodoShowInput {
         public getAuthUserId(): string {
           return userId;
         }
         public getId(): string {
           return storeTodo.id;
         }
-      }();
-      const output = new class implements TodoShowOutput {
+      })();
+      const output = new (class implements TodoShowOutput {
         public success(todo: Todo | {}): void {
           expect(todo).to.equal(storeTodo);
         }
-      }();
+      })();
       await container.get<UseCase>(TYPES.USECASE_TODOS).show(input, output);
     });
   });
@@ -164,7 +164,7 @@ describe("usecases/Todos/implementations", () => {
       };
       container.rebind<TodoStore>(TYPES.STORE_TODOS).to(UseCaseStoreTodosMock);
 
-      const input = new class implements TodoUpdateInput {
+      const input = new (class implements TodoUpdateInput {
         public getAuthUserId(): string {
           return userId;
         }
@@ -177,12 +177,12 @@ describe("usecases/Todos/implementations", () => {
         public getChecked(): boolean {
           return storeTodo.checked;
         }
-      }();
-      const output = new class implements TodoUpdateOutput {
+      })();
+      const output = new (class implements TodoUpdateOutput {
         public success(todo: Todo): void {
           expect(todo).to.equal(storeTodo);
         }
-      }();
+      })();
       await container.get<UseCase>(TYPES.USECASE_TODOS).update(input, output);
     });
   });
@@ -201,19 +201,19 @@ describe("usecases/Todos/implementations", () => {
       };
       container.rebind<TodoStore>(TYPES.STORE_TODOS).to(UseCaseStoreTodosMock);
 
-      const input = new class implements TodoDeleteInput {
+      const input = new (class implements TodoDeleteInput {
         public getAuthUserId(): string {
           return userId;
         }
         public getId(): string {
           return storeTodo.id;
         }
-      }();
-      const output = new class implements TodoDeleteOutput {
+      })();
+      const output = new (class implements TodoDeleteOutput {
         public success(): void {
           expect(true).to.equal(true);
         }
-      }();
+      })();
       await container.get<UseCase>(TYPES.USECASE_TODOS).delete(input, output);
     });
   });

@@ -35,15 +35,15 @@ describe("usecases/System/implementations", () => {
       };
       container.rebind<TodoStore>(TYPES.STORE_TODOS).to(UseCaseStoreTodosMock);
 
-      const input = new class implements SystemResetStoresInput {
+      const input = new (class implements SystemResetStoresInput {
         public getTodosReadCapacity(): number {
           return readCapacity;
         }
         public getTodosWriteCapacity(): number {
           return writeCapacity;
         }
-      }();
-      const output = new class implements SystemResetStoresOutput {
+      })();
+      const output = new (class implements SystemResetStoresOutput {
         public success(): void {
           expect(true).to.equal(true);
           countSuccess++;
@@ -51,7 +51,7 @@ describe("usecases/System/implementations", () => {
         public failed(_error: any): void {
           expect(true).to.equal(false);
         }
-      }();
+      })();
       await container
         .get<UseCase>(TYPES.USECASE_SYSTEM)
         .resetAllStores(input, output);
