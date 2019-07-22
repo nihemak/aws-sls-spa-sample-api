@@ -15,6 +15,6 @@ export function applyCommonMiddlewares(handler: middy.IMiddy): middy.IMiddy {
       })
     )
     .use(httpEventNormalizer())
-    .use(httpJsonBodyParser())
+    .use(httpJsonBodyParser({}))
     .use(errorHandler());
 }
