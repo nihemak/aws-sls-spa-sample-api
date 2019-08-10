@@ -8,6 +8,7 @@ plugins:
 
 provider:
   name: aws
+  endpointType: REGIONAL
   runtime: nodejs8.10
   region: ap-northeast-1
   stage: ${env:STAGE_ENV}
