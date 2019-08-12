@@ -4,8 +4,6 @@ phases:
     runtime-versions:
       docker: 18
       nodejs: 10
-    commands:
-      - npm run docker-build
   build:
     commands:
       - npm run docker-test-all
