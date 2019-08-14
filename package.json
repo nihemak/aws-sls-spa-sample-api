@@ -1,6 +1,6 @@
 {
   "name": "aws-sls-spa-sample-api",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "description": "Sample of serverless api",
   "main": "app/http/controllers/*.ts",
   "scripts": {
