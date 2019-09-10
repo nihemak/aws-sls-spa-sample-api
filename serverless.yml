@@ -8,6 +8,8 @@ plugins:
 
 provider:
   name: aws
+  logs:
+    restApi: true
   endpointType: REGIONAL
   runtime: nodejs8.10
   region: ap-northeast-1
