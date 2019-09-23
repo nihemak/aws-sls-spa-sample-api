@@ -9,7 +9,20 @@ plugins:
 provider:
   name: aws
   logs:
-    restApi: true
+    restApi:
+      format:
+        '{
+          "request_id":"$context.requestId",
+          "ip": "$context.identity.sourceIp",
+          "caller": "$context.identity.caller",
+          "user": "$context.identity.user",
+          "request_time": "$context.requestTime",
+          "http_method": "$context.httpMethod",
+          "resource_path": "$context.resourcePath",
+          "status": "$context.status",
+          "protocol": "$context.protocol",
+          "response_length": "$context.responseLength"
+        }'
   endpointType: REGIONAL
   runtime: nodejs8.10
   region: ap-northeast-1
