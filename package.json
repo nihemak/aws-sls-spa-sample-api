@@ -28,7 +28,7 @@
     "@middy/http-cors": "^1.0.0-alpha.41",
     "@middy/http-event-normalizer": "^1.0.0-alpha.41",
     "@middy/http-json-body-parser": "^1.0.0-alpha.41",
-    "aws-sdk": "^2.524.0",
+    "aws-sdk": "^2.814.0",
     "inversify": "^4.14.0",
     "jsonwebtoken": "^8.5.1",
     "jwk-to-pem": "^2.0.1",
