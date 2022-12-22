@@ -30,7 +30,7 @@
     "@middy/http-json-body-parser": "^1.0.0-alpha.41",
     "aws-sdk": "^2.524.0",
     "inversify": "^4.14.0",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "^9.0.0",
     "jwk-to-pem": "^2.0.1",
     "lodash": "^4.17.15",
     "reflect-metadata": "^0.1.13",
